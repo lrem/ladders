@@ -60,3 +60,8 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+*.swp
+*.js
+web/node_modules
+web/typings
+*.js.map

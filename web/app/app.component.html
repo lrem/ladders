@@ -1,0 +1,11 @@
+<h1>Ranking of ladder {{ladder}}</h1>
+<game>Loading.</game>
+<table *ngIf="ready" >
+  <tr *ngFor="#player of ranking; #index=index">
+    <th>{{index}}</th>    
+    <td>{{player.name}}</td>
+    <td>{{math.round(player.mu)}}</td>
+  </tr>
+</table>
+<p *ngIf="!ready">Loading ranking.</p>
+    

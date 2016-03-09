@@ -1,0 +1,14 @@
+<button *ngIf="!active" (click)="active=true"> Report a new game</button>
+<form *ngIf="active" (ngSubmit)="onSubmit()">
+  <table>
+    <tr *ngFor="#team of players; #team_index=index">
+      <th>Team {{team_index}}</th>
+      <td *ngFor="#player of team; #player_index=index">
+        <input type="text"
+               [(ngModel)]="players[team_index][player_index].name"
+               placeholder="Name of player {{player_index}}">
+      </td>
+    </tr>
+  </table>
+  <button type="submit">Report the game</button>
+</form>
