@@ -1,5 +1,5 @@
 <h1>Ranking of ladder {{ladder}}</h1>
-<game>Loading.</game>
+<game [ladder]="ladder">Loading.</game>
 <table *ngIf="ready" >
   <tr *ngFor="#player of ranking; #index=index">
     <th>{{index}}</th>    

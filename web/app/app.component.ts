@@ -1,6 +1,7 @@
 import {Component} from 'angular2/core';
 import 'rxjs/Rx' ;
 import {Http, Response, RequestOptions, Headers, Request, RequestMethod, HTTP_PROVIDERS} from 'angular2/http';
+import {RouteConfig, Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from 'angular2/router';
 import {Math} from 'angular2/src/facade/math';
 
 
@@ -34,11 +35,12 @@ interface participants {
 
 @Component({
     selector: 'game',
+    inputs: ['ladder'],
     viewProviders: [HTTP_PROVIDERS],
     templateUrl: 'app/game.component.html'
 })
 export class GameComponent {
-  public ladder = 'foo';
+  public ladder : string;
   public active = false;
   public math = Math;
   public teams_count = 2;
@@ -65,17 +67,23 @@ export class GameComponent {
 
 @Component({
     selector: 'ladder',
+    providers: [ROUTER_PROVIDERS],
     viewProviders: [HTTP_PROVIDERS],
     directives: [GameComponent],
     templateUrl: 'app/app.component.html'
 })
-export class AppComponent {
+export class LadderComponent {
   public ranking = 'Loading ranking.';
-  public ladder = 'foo';
+  public ladder : string;
   public ready = false;
   public math = Math;
-  constructor(public http: Http) {
-    http.get(`http://127.0.0.1:5000/${this.ladder}/ranking`).
+  constructor(private http: Http,
+              private router:Router,
+              private routeParams:RouteParams
+             ) {}
+  ngOnInit() {
+    this.ladder = this.routeParams.get('ladder');
+    this.http.get(`http://127.0.0.1:5000/${this.ladder}/ranking`).
       map(res => res.json()).
       subscribe(json => {
         this.ranking = json.ranking;
@@ -83,3 +91,14 @@ export class AppComponent {
   }
 }
 
+@Component({
+    selector: 'ladders-main',
+    providers: [ROUTER_PROVIDERS],
+    directives: [ROUTER_DIRECTIVES],
+    template: `<router-outlet></router-outlet>`,
+    //templateUrl: 'app/app.component.html'
+})
+@RouteConfig([
+  {path:'/ladder/:ladder', name:'Ladder', component:LadderComponent}
+])
+export class AppComponent { }
