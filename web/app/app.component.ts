@@ -4,35 +4,6 @@ import {Http, Response, RequestOptions, Headers, Request, RequestMethod, HTTP_PR
 import {RouteConfig, Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from 'angular2/router';
 import {Math} from 'angular2/src/facade/math';
 
-
-interface ladders {
-  name: string;
-  mu: number;
-  sigma: number;
-  tau: number;
-  draw_probability: number;
-  last_ranking: number;
-}
-
-interface players {
-  name: string;
-  ladder: string;
-  mu: number;
-  sigma: number;
-}
-
-interface games {
-  id: number;
-  ladder: string;
-  timestamp: number;
-}
-
-interface participants {
-  game: number;
-  player: string;
-  position: number;
-}
-
 @Component({
     selector: 'game',
     inputs: ['ladder'],
