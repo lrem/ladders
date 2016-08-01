@@ -11,7 +11,7 @@ app = flask.Flask(__name__)
 def settings(ladder:str) -> flask.Response:
     """Create a new ladder or change its settings."""
     if not require(["name"]):
-        abort(400)
+        flask.abort(400)
     r = flask.request
     c = flask.g.dbh.cursor()
     c.execute("replace into ladders (name, mu, sigma, tau, "
@@ -89,7 +89,7 @@ def recalculate(ladder:str) -> None:
     c.execute("select id, timestamp from games "
               "where ladder=? and timestamp>?",
               [ladder, l["last_ranking"]])
-    players = {}
+    players = {}  # type: Dict[str, trueskill.Rating]
     max_timestamp = 0
     for game, timestamp in c.fetchall():
         logging.info("Processing game %d at timestamp %d", game, timestamp)
