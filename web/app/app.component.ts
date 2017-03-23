@@ -57,8 +57,12 @@ export class LadderComponent {
     this.http.get(`http://127.0.0.1:5000/${this.ladder}/ranking`).
       map(res => res.json()).
       subscribe(json => {
-        this.ranking = json.ranking;
-        this.ready = true});
+        if(json.exists) {
+          this.ranking = json.ranking;
+          this.ready = true
+        } else {
+        }
+      });
   }
 }
 

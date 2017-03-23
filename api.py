@@ -50,11 +50,14 @@ def submit(ladder:str) -> flask.Response:
 @app.route("/<ladder>/ranking", methods=['GET'])
 def ranking(ladder:str) -> flask.Response:
     """Get the players ranked by their skill."""
+    if not ladder_exists(ladder):
+        return flask.jsonify({"exists": False})
     recalculate(ladder)
     c = flask.g.dbh.cursor()
     c.execute("select name, mu from players where ladder = ? "
             "order by mu desc", [ladder])
     result = {
+        "exists": True,
         "ranking": [dict(player) for player in c.fetchall()]
         }
     return flask.jsonify(result)
@@ -78,6 +81,11 @@ def require(fields:typing.Iterable[str]) -> bool:
     """Verify that request contains json with specified fields."""
     return flask.request.get_json(True) and all(
             field in flask.request.json for field in fields)
+
+def ladder_exists(ladder:str) -> bool:
+    """Check whether a ladder already exists."""
+    return flask.g.dbh.execute('select count(*) from ladders where name = ?',
+                               [ladder]).fetchone()[0] > 0
 
 def recalculate(ladder:str) -> None:
     c = flask.g.dbh.cursor()
