@@ -61,7 +61,18 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 *.swp
+
+# Angular
 *.js
+*.map
+web/.sass-cache
+web/connect.lock
+web/coverage
 web/node_modules
 web/typings
-*.js.map
+web/dist
+web/tmp
+web/out-tsc
+
+# Temporary
+web.bak
