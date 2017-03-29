@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
-import { AppComponent, LadderComponent, GameComponent } from './app.component';
+import { AppComponent, LadderComponent, GameComponent, RankingComponent } from './app.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LadderComponent,
     GameComponent,
+    RankingComponent,
   ],
   imports: [
     BrowserModule,

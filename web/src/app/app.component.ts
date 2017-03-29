@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {Http, Response, RequestOptions, Headers, Request, RequestMethod} from '@angular/http';
@@ -14,6 +14,7 @@ import 'rxjs/Rx' ;
 })
 export class GameComponent {
   public ladder : string;
+  @Output() onAdded: EventEmitter<any> = new EventEmitter();
   public active = false;
   public math = Math;
   public teams_count = 2;
@@ -21,11 +22,6 @@ export class GameComponent {
   public players = [[{name: ''}], [{name: ''}]];
   constructor(public http: Http) {
     this.http = http;
-    /*http.get(`http://127.0.0.1:5000/${this.ladder}/ranking`).
-      map(res => res.json()).
-      subscribe(json => {
-        this.ranking = json.ranking;
-        this.ready = true});*/
   }
   onSubmit() {
     let headers = new Headers();
@@ -33,10 +29,23 @@ export class GameComponent {
     let result = JSON.stringify({'outcome': this.players});
     console.debug(result);
     this.http.post(`http://127.0.0.1:5000/${this.ladder}/game`,
-              result, {headers: headers}).subscribe();
+              result, {headers: headers}).subscribe(() => {
+                this.onAdded.emit();
+              });
   }
 }
 
+
+@Component({
+  selector: 'ranking',
+  inputs: ['ranking', 'ready'],
+  templateUrl: './ranking.component.html'
+})
+export class RankingComponent {
+  public ranking : Object;
+  public ready : boolean;
+  public math = Math;
+}
 
 @Component({
     selector: 'ladder',
@@ -46,13 +55,15 @@ export class LadderComponent {
   public ranking = 'Loading ranking.';
   public ladder : string;
   public ready = false;
-  public math = Math;
   constructor(private http: Http,
               private route:ActivatedRoute,
               private location:Location,
              ) {}
   ngOnInit() {
     this.route.params.subscribe(params => this.ladder = params['ladder']);
+    this.reload()
+  }
+  reload() {
     this.http.get(`http://127.0.0.1:5000/${this.ladder}/ranking`).
       map(res => res.json()).
       subscribe(json => {
@@ -60,7 +71,7 @@ export class LadderComponent {
           this.ranking = json.ranking;
           this.ready = true
         } else {
-          this.ranking = null
+          console.debug(`${this.ladder} does not exist`);
           this.ready = true
         }
       });

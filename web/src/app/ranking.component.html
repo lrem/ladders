@@ -1,0 +1,13 @@
+<table *ngIf="ready">
+  <tr>
+    <td></td>
+    <th>Name</th>
+    <th>Skill level</th>
+  </tr>
+  <tr *ngFor="let player of ranking; let index=index">
+    <th>{{index}}</th>    
+    <td>{{player.name}}</td>
+    <td>{{math.round(player.mu)}}</td>
+  </tr>
+</table>
+<p *ngIf="!ready">Loading ranking.</p>
