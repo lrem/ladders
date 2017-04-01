@@ -10,7 +10,6 @@ import 'rxjs/Rx' ;
     selector: 'game',
     inputs: ['ladder'],
     templateUrl: './game.component.html',
-    styleUrls: ['./app.component.css']
 })
 export class GameComponent {
   public ladder : string;
@@ -49,7 +48,8 @@ export class RankingComponent {
 
 @Component({
     selector: 'ladder',
-    templateUrl: './app.component.html'
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
 export class LadderComponent {
   public ranking = 'Loading ranking.';

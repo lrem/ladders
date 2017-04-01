@@ -1,3 +1,20 @@
-<h1>Ranking of ladder {{ladder}}</h1>
+<md-sidenav-container>
+  <md-toolbar color="primary">
+    <button class="app-icon-button" (click)="sidenav.toggle()">
+      <i class="material-icons app-toolbar-menu">menu</i>
+    </button>
+    Ladders
+  </md-toolbar>
+  <md-sidenav #sidenav>
+    Sidenav
+  </md-sidenav>
 <game [ladder]="ladder" (onAdded)="this.reload()">Loading.</game>
-<ranking [ranking]="this.ranking" [ready]="this.ready">Loading.</ranking>
+  <div class="app-content">
+    <h1>Ranking of {{ladder}}</h1>
+    <ranking [ranking]="this.ranking" [ready]="this.ready">Loading.</ranking>
+  </div>
+</md-sidenav-container>
+
+<span class="app-action">
+  <button md-fab><md-icon>add</md-icon></button>
+</span>

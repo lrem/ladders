@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { MaterialModule} from '@angular/material';
 
 import { AppComponent, LadderComponent, GameComponent, RankingComponent } from './app.component';
 
@@ -17,6 +18,7 @@ import { AppComponent, LadderComponent, GameComponent, RankingComponent } from '
     BrowserModule,
     FormsModule,
     HttpModule,
+    MaterialModule,
     RouterModule.forRoot([
       {
         path: 'ladder/:ladder', component:LadderComponent
