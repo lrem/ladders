@@ -1,15 +1,21 @@
-<button *ngIf="!active" (click)="active=true"> Report a new game</button>
-<form *ngIf="active" (ngSubmit)="onSubmit()">
-  <table>
-    <tr *ngFor="let team of players; let team_index=index">
-      <th>Team {{team_index}}</th>
-      <td *ngFor="let player of team; let player_index=index">
-        <input type="text"
-               [(ngModel)]="players[team_index][player_index].name"
-               placeholder="Name of player {{player_index}}"
-               name="name">
-      </td>
-    </tr>
-  </table>
-  <button type="submit">Report the game</button>
+<h1 md-dialog-title>Report a game in {{ladder}}</h1>
+<form (ngSubmit)="onSubmit()">
+  <md-dialog-content>
+    <table>
+      <tr *ngFor="let team of players; let team_index=index">
+        <th>Team {{team_index}}</th>
+        <td *ngFor="let player of team; let player_index=index">
+          <input type="text"
+                 [(ngModel)]="players[team_index][player_index].name"
+                 placeholder="Name of player {{player_index}}"
+                 name="name">
+        </td>
+      </tr>
+    </table>
+  </md-dialog-content>
+  <md-dialog-actions>
+    <button *ngIf="!submitting" type="submit">Report the game</button>
+    <md-progress-bar *ngIf="submitting" mode="indeterminate">
+    </md-progress-bar>
+  </md-dialog-actions>
 </form>

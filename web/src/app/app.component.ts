@@ -2,34 +2,35 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {Http, Response, RequestOptions, Headers, Request, RequestMethod} from '@angular/http';
+import {MdDialog, MdDialogRef} from '@angular/material';
 import { Location } from '@angular/common';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/Rx' ;
 
 @Component({
     selector: 'game',
-    inputs: ['ladder'],
     templateUrl: './game.component.html',
 })
-export class GameComponent {
+export class GameDialog {
   public ladder : string;
-  @Output() onAdded: EventEmitter<any> = new EventEmitter();
-  public active = false;
-  public math = Math;
+  public submitting = false;
   public teams_count = 2;
   public players_per_team = 1;
   public players = [[{name: ''}], [{name: ''}]];
-  constructor(public http: Http) {
+  constructor(public http: Http,
+              public dialogRef: MdDialogRef<GameDialog>) {
     this.http = http;
+    this.ladder = this.dialogRef.config.data.ladder;
   }
   onSubmit() {
+    this.submitting = true;
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     let result = JSON.stringify({'outcome': this.players});
     console.debug(result);
     this.http.post(`http://127.0.0.1:5000/${this.ladder}/game`,
               result, {headers: headers}).subscribe(() => {
-                this.onAdded.emit();
+                this.dialogRef.close();
               });
   }
 }
@@ -58,10 +59,16 @@ export class LadderComponent {
   constructor(private http: Http,
               private route:ActivatedRoute,
               private location:Location,
+              public gameDialog: MdDialog,
              ) {}
   ngOnInit() {
     this.route.params.subscribe(params => this.ladder = params['ladder']);
     this.reload()
+  }
+  openGameDialog() {
+    let dialogRef = this.gameDialog.open(GameDialog,
+                                         {data: {ladder: this.ladder}});
+    dialogRef.afterClosed().subscribe(result => {this.reload();});
   }
   reload() {
     this.http.get(`http://127.0.0.1:5000/${this.ladder}/ranking`).

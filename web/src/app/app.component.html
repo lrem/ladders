@@ -8,7 +8,6 @@
   <md-sidenav #sidenav>
     Sidenav
   </md-sidenav>
-<game [ladder]="ladder" (onAdded)="this.reload()">Loading.</game>
   <div class="app-content">
     <h1>Ranking of {{ladder}}</h1>
     <ranking [ranking]="this.ranking" [ready]="this.ready">Loading.</ranking>
@@ -16,5 +15,5 @@
 </md-sidenav-container>
 
 <span class="app-action">
-  <button md-fab><md-icon>add</md-icon></button>
+  <button md-fab (click)="openGameDialog()"><md-icon>add</md-icon></button>
 </span>
