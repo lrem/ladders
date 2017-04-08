@@ -4,6 +4,7 @@ import sqlite3
 import trueskill
 import logging
 import typing
+from collections import defaultdict
 
 app = flask.Flask(__name__)
 
@@ -61,6 +62,31 @@ def ranking(ladder:str) -> flask.Response:
         "ranking": [dict(player) for player in c.fetchall()]
         }
     return flask.jsonify(result)
+
+@app.route("/<ladder>/matches", methods=['GET'])
+@app.route("/<ladder>/matches/<count>", methods=['GET'])
+@app.route("/<ladder>/matches/<count>/<offset>", methods=['GET'])
+def matches(ladder:str, count=42, offset=0) -> flask.Response:
+    """Get the most recent matches."""
+    if not ladder_exists(ladder):
+        return flask.jsonify({"exists": False})
+    c = flask.g.dbh.cursor()
+    c.execute("select id, timestamp from games where ladder = ? "
+              "order by timestamp desc limit ? offset ?",
+              [ladder, count, offset])
+    matches = []
+    for game in c.fetchall():
+        gid, timestamp = game
+        outcome: defaultdict[int, typing.List[str]] = defaultdict(list)
+        c.execute("select position, player from participants where game = ?",
+                  [gid])
+        for entry in c.fetchall():
+            outcome[entry[0]].append(entry[1])
+        matches.append({"timestamp": timestamp,
+                        "outcome": [outcome[i]
+                                    for i in sorted(outcome.keys())]})
+    return flask.jsonify({"exists": True, "matches": matches})
+
 
 @app.before_request
 def before_request() -> None:
