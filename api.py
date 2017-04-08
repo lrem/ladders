@@ -2,9 +2,9 @@ import flask # type:ignore
 import os
 import sqlite3
 import trueskill
-import typing
 import logging
-import collections
+import typing
+
 app = flask.Flask(__name__)
 
 @app.route("/<ladder>/settings", methods=["POST"])
@@ -97,7 +97,7 @@ def recalculate(ladder:str) -> None:
     c.execute("select id, timestamp from games "
               "where ladder=? and timestamp>?",
               [ladder, l["last_ranking"]])
-    players = {}  # type: Dict[str, trueskill.Rating]
+    players: typing.Dict[str, trueskill.Rating] = {}  
     max_timestamp = 0
     for game, timestamp in c.fetchall():
         logging.info("Processing game %d at timestamp %d", game, timestamp)
