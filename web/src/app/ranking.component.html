@@ -1,14 +1,18 @@
-<h1>Ranking of {{ladder}}</h1>
-<table *ngIf="ready">
-  <tr>
-    <td></td>
-    <th>Name</th>
-    <th>Skill level</th>
-  </tr>
-  <tr *ngFor="let player of ranking; let index=index">
-    <th>{{index}}</th>    
-    <td>{{player.name}}</td>
-    <td>{{math.round(player.mu)}}</td>
-  </tr>
-</table>
-<p *ngIf="!ready">Loading ranking.</p>
+<md-card>
+  <md-card-title>Ranking of {{ladder}}</md-card-title>
+  <md-card-content>
+    <table *ngIf="ready">
+      <tr>
+        <td></td>
+        <th>Name</th>
+        <th>Skill level</th>
+      </tr>
+      <tr *ngFor="let player of ranking; let index=index">
+        <th>{{index}}</th>    
+        <td>{{player.name}}</td>
+        <td>{{math.round(player.mu)}}</td>
+      </tr>
+    </table>
+    <p *ngIf="!ready">Loading ranking.</p>
+  </md-card-content>
+</md-card>

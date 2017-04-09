@@ -39,6 +39,7 @@ export class GameDialog {
 @Component({
   selector: 'ranking',
   inputs: ['ladder'],
+  styleUrls: ['./app.component.css'],
   templateUrl: './ranking.component.html'
 })
 export class RankingComponent {
@@ -69,6 +70,7 @@ export class RankingComponent {
 @Component({
   selector: 'matches',
   inputs: ['ladder'],
+  styleUrls: ['./app.component.css'],
   templateUrl: './matches.component.html',
 })
 export class MatchesComponent {

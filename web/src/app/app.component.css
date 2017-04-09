@@ -2,6 +2,12 @@
   padding: 20px;
 }
 
+.app-content:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .app-action {
   display: block;
   position: fixed;
@@ -14,4 +20,21 @@
   border: none;
   cursor: pointer;
   color: inherit;
+}
+
+ul.team {
+  margin: 1px;
+}
+
+ul.team li {
+  display: block;
+}
+
+@media(min-width:800px) {
+  md-card {
+    min-width: 40%;
+    width: auto;
+    float: left;
+    margin: 0 10px;
+  }
 }

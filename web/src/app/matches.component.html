@@ -10,11 +10,11 @@
       <tr *ngFor="let match of matchList">
         <td>{{match.timestamp}}</td>    
         <td *ngFor="let team of match.outcome">
-          <md-list>
-            <md-list-item *ngFor="let player of team">
+          <ul class="team">
+            <li *ngFor="let player of team">
               {{player}}
-            </md-list-item>
-          </md-list>
+            </li>
+          </ul>
         </td>
       </tr>
     </table>
