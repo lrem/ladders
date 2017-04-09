@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {Http, Response, RequestOptions, Headers, Request, RequestMethod} from '@angular/http';
@@ -38,37 +38,18 @@ export class GameDialog {
 
 @Component({
   selector: 'ranking',
-  inputs: ['ranking', 'ready'],
+  inputs: ['ladder'],
   templateUrl: './ranking.component.html'
 })
 export class RankingComponent {
+  public ladder : string;
   public ranking : Object;
   public ready : boolean;
   public math = Math;
-}
-
-@Component({
-    selector: 'ladder',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
-})
-export class LadderComponent {
-  public ranking = 'Loading ranking.';
-  public ladder : string;
-  public ready = false;
   constructor(private http: Http,
-              private route:ActivatedRoute,
-              private location:Location,
-              public gameDialog: MdDialog,
              ) {}
   ngOnInit() {
-    this.route.params.subscribe(params => this.ladder = params['ladder']);
     this.reload()
-  }
-  openGameDialog() {
-    let dialogRef = this.gameDialog.open(GameDialog,
-                                         {data: {ladder: this.ladder}});
-    dialogRef.afterClosed().subscribe(result => {this.reload();});
   }
   reload() {
     this.http.get(`http://127.0.0.1:5000/${this.ladder}/ranking`).
@@ -82,6 +63,32 @@ export class LadderComponent {
           this.ready = true
         }
       });
+  }
+}
+
+@Component({
+    selector: 'ladder',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
+})
+export class LadderComponent {
+  @ViewChild(RankingComponent) ranking: RankingComponent;
+  public ladder : string;
+  constructor(private http: Http,
+              private route:ActivatedRoute,
+              private location:Location,
+              public gameDialog: MdDialog,
+             ) {}
+  ngOnInit() {
+    this.route.params.subscribe(params => this.ladder = params['ladder']);
+  }
+  openGameDialog() {
+    let dialogRef = this.gameDialog.open(GameDialog,
+                                         {data: {ladder: this.ladder}});
+    dialogRef.afterClosed().subscribe(result => {this.reload();});
+  }
+  reload() {
+    this.ranking.reload();
   }
 }
 
