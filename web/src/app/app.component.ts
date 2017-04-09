@@ -44,7 +44,7 @@ export class GameDialog {
 export class RankingComponent {
   public ladder : string;
   public ranking : Object;
-  public ready : boolean;
+  public ready : boolean = false;
   public math = Math;
   constructor(private http: Http,
              ) {}
@@ -67,12 +67,42 @@ export class RankingComponent {
 }
 
 @Component({
+  selector: 'matches',
+  inputs: ['ladder'],
+  templateUrl: './matches.component.html',
+})
+export class MatchesComponent {
+  public ladder : string;
+  public matchList : Object;
+  public ready : boolean = false;
+  constructor(private http: Http,
+             ) {}
+  ngOnInit() {
+    this.reload()
+  }
+  reload() {
+    this.http.get(`http://127.0.0.1:5000/${this.ladder}/matches`).
+      map(res => res.json()).
+      subscribe(json => {
+        if(json.exists) {
+          this.matchList = json.matches;
+          this.ready = true
+        } else {
+          console.debug(`${this.ladder} does not exist`);
+          this.ready = true
+        }
+      });
+  }
+}
+
+@Component({
     selector: 'ladder',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
 export class LadderComponent {
   @ViewChild(RankingComponent) ranking: RankingComponent;
+  @ViewChild(MatchesComponent) matches: MatchesComponent;
   public ladder : string;
   constructor(private http: Http,
               private route:ActivatedRoute,
@@ -89,6 +119,7 @@ export class LadderComponent {
   }
   reload() {
     this.ranking.reload();
+    this.matches.reload();
   }
 }
 

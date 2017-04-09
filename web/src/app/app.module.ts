@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { MaterialModule} from '@angular/material';
 
-import { AppComponent, LadderComponent, GameDialog, RankingComponent } from './app.component';
+import { AppComponent, LadderComponent, GameDialog, RankingComponent, MatchesComponent} from './app.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +13,7 @@ import { AppComponent, LadderComponent, GameDialog, RankingComponent } from './a
     LadderComponent,
     GameDialog,
     RankingComponent,
+    MatchesComponent,
   ],
   entryComponents: [
     AppComponent,
