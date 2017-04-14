@@ -1,4 +1,6 @@
 import flask # type:ignore
+import oauth2client.client
+import oauth2client.crypt
 import os
 import sqlite3
 import trueskill
@@ -7,6 +9,11 @@ import typing
 from collections import defaultdict
 
 app = flask.Flask(__name__)
+
+ACCEPTED_OAUTH_CLIENTS = (
+# The web frontend:
+"151187347955-v66j53n6mavb5mahpaq77q4k8fk1g588.apps.googleusercontent.com",
+)
 
 @app.route("/<ladder>/settings", methods=["POST"])
 def settings(ladder:str) -> flask.Response:
@@ -87,6 +94,17 @@ def matches(ladder:str, count=42, offset=0) -> flask.Response:
                                     for i in sorted(outcome.keys())]})
     return flask.jsonify({"exists": True, "matches": matches})
 
+@app.route("/<ladder>/owned", methods=['POST'])
+def ladder_owned(ladder:str) -> flask.Response:
+    """Return whether the user is logged in and is the owner of the ladder."""
+    try:
+        user_id = get_uid()
+        c = flask.g.dbh.cursor()
+        c.execute("select count(*) from owners where user_id = ? and ladder = ?", [user_id, ladder])
+        result = c.fetchone()[0] == 1
+    except:
+        result = false
+    return flask.jsonify(result)
 
 @app.before_request
 def before_request() -> None:
@@ -102,6 +120,17 @@ def allow_cross_domain(response:flask.Response):
 @app.teardown_request
 def teardown_request(exception:typing.Any) -> None:
     flask.g.dbh.close()
+
+def get_uid() -> str:
+    """Extract user id from token received by POST."""
+    token = flask.request.form["idtoken"] 
+    idinfo = oauth2client.client.verify_id_token(token, None)
+    if idinfo['aud'] not in ACCEPTED_OAUTH_CLIENTS:
+        raise oauth2client.crypt.AppIdentityError("Unrecognized client.")
+    if idinfo['iss'] not in ['accounts.google.com',
+                             'https://accounts.google.com']:
+        raise crypt.AppIdentityError("Wrong issuer.")
+    return idinfo['sub']
 
 def require(fields:typing.Iterable[str]) -> bool:
     """Verify that request contains json with specified fields."""

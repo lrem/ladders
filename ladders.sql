@@ -30,3 +30,11 @@ create table participants (
     foreign key(game) references games(id),
     primary key(game, player)
 );
+
+create table owners (
+    user_id text,
+		ladder text,
+		foreign key(ladder) references ladders(name),
+		primary key(user_id, ladder)
+);
+ 
