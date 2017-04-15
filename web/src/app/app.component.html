@@ -6,7 +6,10 @@
     Ladders
   </md-toolbar>
   <md-sidenav #sidenav>
-    Sidenav
+    <div class="g-signin2" data-scope="openid email"
+      data-onsuccess="onSignIn"></div>
+    <div *ngIf="this.owned">Owner.</div>
+    <button onclick="signOut();">Sign out</button>
   </md-sidenav>
   <div class="app-content">
     <ranking [ladder]="this.ladder">Loading.</ranking>

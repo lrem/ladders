@@ -1,4 +1,4 @@
-import { Component, Input, Output, ViewChild } from '@angular/core';
+import { Component, Input, Output, ViewChild, NgZone } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {Http, Response, RequestOptions, Headers, Request, RequestMethod} from '@angular/http';
@@ -106,11 +106,16 @@ export class LadderComponent {
   @ViewChild(RankingComponent) ranking: RankingComponent;
   @ViewChild(MatchesComponent) matches: MatchesComponent;
   public ladder : string;
+  public owned: boolean;
   constructor(private http: Http,
               private route:ActivatedRoute,
               private location:Location,
+              private ngZone: NgZone,
               public gameDialog: MdDialog,
-             ) {}
+             ) {
+    window['onSignIn'] =
+      (googleUser) => ngZone.run(() => this.onSignIn(googleUser));
+  }
   ngOnInit() {
     this.route.params.subscribe(params => this.ladder = params['ladder']);
   }
@@ -118,6 +123,16 @@ export class LadderComponent {
     let dialogRef = this.gameDialog.open(GameDialog,
                                          {data: {ladder: this.ladder}});
     dialogRef.afterClosed().subscribe(result => {this.reload();});
+  }
+  onSignIn(googleUser) {
+    let id_token = googleUser.getAuthResponse().id_token;
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    this.http.post(`http://127.0.0.1:5000/${this.ladder}/owned`,
+                   {idtoken: id_token}, {headers: headers})
+                   .map(res => res.json()).subscribe(json => {
+                     this.owned = json;
+                   });
   }
   reload() {
     this.ranking.reload();

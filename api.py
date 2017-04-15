@@ -102,8 +102,9 @@ def ladder_owned(ladder:str) -> flask.Response:
         c = flask.g.dbh.cursor()
         c.execute("select count(*) from owners where user_id = ? and ladder = ?", [user_id, ladder])
         result = c.fetchone()[0] == 1
-    except:
-        result = false
+    except Exception as exception:
+        logging.info("Auth exception: " + str(exception))
+        result = False
     return flask.jsonify(result)
 
 @app.before_request
@@ -123,7 +124,7 @@ def teardown_request(exception:typing.Any) -> None:
 
 def get_uid() -> str:
     """Extract user id from token received by POST."""
-    token = flask.request.form["idtoken"] 
+    token = flask.request.json["idtoken"] 
     idinfo = oauth2client.client.verify_id_token(token, None)
     if idinfo['aud'] not in ACCEPTED_OAUTH_CLIENTS:
         raise oauth2client.crypt.AppIdentityError("Unrecognized client.")
