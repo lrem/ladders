@@ -22,13 +22,15 @@ ACCEPTED_OAUTH_CLIENTS = (
 def settings(ladder: str) -> flask.Response:
     """Create a new ladder or change its settings."""
     req = flask.request
-    if not require(['name']) or req['name'] != ladder:
+    if not require(['name']) or req.json['name'] != ladder:
         flask.abort(400)
     cursor = flask.g.dbh.cursor()
-    cursor.execute('replace into ladders (name, mu, sigma, tau, '
-                   'draw_probability) values (?, ?, ?, ?, ?)',
-                   [req['name'], req.get('mu', 1200), req.get('sigma', 200),
-                    req.get('tau', 12), req.get('draw_probability', 0)])
+    with flask.g.dbh:
+        cursor.execute('replace into ladders (name, mu, sigma, tau, '
+                       'draw_probability) values (?, ?, ?, ?, ?)',
+                       [req.json['name'], req.json.get('mu', 1200),
+                        req.json.get('sigma', 200), req.json.get('tau', 12),
+                        req.json.get('draw_probability', 0)])
     return flask.jsonify({'result': 'ok'}), 201
 
 
