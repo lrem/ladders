@@ -216,6 +216,7 @@ def main():
     logging.basicConfig(level=logging.INFO)
     if not os.path.exists('ladders.db'):
         dbh = sqlite3.connect('ladders.db')
+        dbh.execute('PRAGMA foreign_keys = ON')
         with open('ladders.sql') as schema:
             dbh.cursor().executescript(schema.read())
     app.run(debug=True)
