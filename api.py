@@ -64,6 +64,39 @@ def submit(ladder: str) -> flask.Response:
     return flask.jsonify({'result': 'ok'}), 201
 
 
+@app.route('/<ladder>/remove', methods=['POST'])
+def remove(ladder: str) -> flask.Response:
+    """Remove a game from the history."""
+    if not owned(ladder):
+        flask.abort(401)
+    if not require(['id']):
+        flask.abort(400)
+    gid = flask.request.json['id']
+    with flask.g.dbh:  # Automatically commit/rollback.
+        cursor = flask.g.dbh.cursor()
+        cursor.execute('select ladder from games where id = ?', [gid])
+        row = cursor.fetchone()
+        if row['ladder'] != ladder:
+            logging.info("Attempt to remove a game from another ladder "
+                         "(id %d is %s in request %s in database).",
+                         gid, ladder, row['game'])
+            flask.abort(401)
+        cursor.execute('delete from games where id = ?', [gid])
+        cursor.execute('delete from participants where game = ?', [gid])
+        cursor.execute('update ladders set last_ranking = 0 where name = ?',
+                       [ladder])
+        cursor.execute('delete from players where ladder = ? '
+                       'and name not in (select player from participants)',
+                       [ladder])
+        cursor.execute('select mu, sigma from ladders where name = ?',
+                       [ladder])
+        conf = cursor.fetchone()
+        cursor.execute('update players set mu = ?, sigma = ? '
+                       'where ladder = ?',
+                       [conf['mu'], conf['sigma'], ladder])
+    return flask.jsonify()
+
+
 @app.route('/<ladder>/ranking', methods=['GET'])
 def ranking(ladder: str) -> flask.Response:
     """Get the players ranked by their skill."""
@@ -100,6 +133,7 @@ def matches(ladder: str, count=42, offset=0) -> flask.Response:
         for entry in cursor.fetchall():
             outcome[entry[0]].append(entry[1])
         result.append({'timestamp': timestamp,
+                       'id': gid,
                        'outcome': [outcome[i]
                                    for i in sorted(outcome.keys())]})
     return flask.jsonify({'exists': True, 'matches': result})
@@ -107,6 +141,10 @@ def matches(ladder: str, count=42, offset=0) -> flask.Response:
 
 @app.route('/<ladder>/owned', methods=['POST'])
 def ladder_owned(ladder: str) -> flask.Response:
+    """Return whether the user is logged in and is the owner of the ladder."""
+    return flask.jsonify(owned(ladder))
+
+def owned(ladder: str) -> bool:
     """Return whether the user is logged in and is the owner of the ladder."""
     try:
         user_id = get_uid()
@@ -118,7 +156,7 @@ def ladder_owned(ladder: str) -> flask.Response:
     except oauth2client.crypt.AppIdentityError as exception:
         logging.info('Auth exception: ' + str(exception))
         result = False
-    return flask.jsonify(result)
+    return result
 
 
 @app.before_request

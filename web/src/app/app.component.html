@@ -13,7 +13,8 @@
   </md-sidenav>
   <div class="app-content">
     <ranking [ladder]="this.ladder">Loading.</ranking>
-    <matches [ladder]="this.ladder">Loading.</matches>
+    <matches [ladder]="this.ladder" [owned]="this.owned"
+       [id_token]="this.id_token">Loading.</matches>
   </div>
 </md-sidenav-container>
 

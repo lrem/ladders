@@ -69,7 +69,7 @@ export class RankingComponent {
 
 @Component({
   selector: 'matches',
-  inputs: ['ladder'],
+  inputs: ['ladder', 'owned', 'id_token'],
   styleUrls: ['./app.component.css'],
   templateUrl: './matches.component.html',
 })
@@ -77,6 +77,7 @@ export class MatchesComponent {
   public ladder : string;
   public matchList : Object;
   public ready : boolean = false;
+  public id_token;
   constructor(private http: Http,
              ) {}
   ngOnInit() {
@@ -95,6 +96,13 @@ export class MatchesComponent {
         }
       });
   }
+  remove(id) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    this.http.post(`http://127.0.0.1:5000/${this.ladder}/remove`,
+                   {id: id, idtoken: this.id_token}, {headers: headers})
+      .subscribe(() => {this.reload();});
+  }
 }
 
 @Component({
@@ -107,6 +115,7 @@ export class LadderComponent {
   @ViewChild(MatchesComponent) matches: MatchesComponent;
   public ladder : string;
   public owned: boolean;
+  public id_token;
   constructor(private http: Http,
               private route:ActivatedRoute,
               private location:Location,
@@ -126,6 +135,7 @@ export class LadderComponent {
   }
   onSignIn(googleUser) {
     let id_token = googleUser.getAuthResponse().id_token;
+    this.id_token = id_token
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     this.http.post(`http://127.0.0.1:5000/${this.ladder}/owned`,

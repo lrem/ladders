@@ -6,6 +6,7 @@
         <th>Date</th>
         <th>Winners</th>
         <th>Losers</th>
+        <th *ngIf="this.owned">Remove</th>
       </tr>
       <tr *ngFor="let match of matchList">
         <td>{{match.timestamp}}</td>    
@@ -15,6 +16,11 @@
               {{player}}
             </li>
           </ul>
+        </td>
+        <td *ngIf="this.owned">
+          <button md-mini-fab (click)="remove(match.id)">
+            <md-icon>delete</md-icon>
+          </button>
         </td>
       </tr>
     </table>
