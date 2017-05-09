@@ -182,6 +182,8 @@ def teardown_request(_exception: typing.Any) -> None:
 
 def get_uid() -> str:
     """Extract user id from token received by POST."""
+    if not 'idtoken' in flask.request.json:
+        raise oauth2client.crypt.AppIdentityError('No OAauth2 token.')
     token = flask.request.json['idtoken']
     idinfo = oauth2client.client.verify_id_token(token, None)
     if idinfo['aud'] not in ACCEPTED_OAUTH_CLIENTS:
