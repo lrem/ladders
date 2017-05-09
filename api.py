@@ -18,19 +18,52 @@ ACCEPTED_OAUTH_CLIENTS = (
 )
 
 
-@app.route('/<ladder>/settings', methods=['POST'])
-def settings(ladder: str) -> flask.Response:
-    """Create a new ladder or change its settings."""
+@app.route('/<ladder>/create', methods=['POST'])
+def create(ladder: str) -> flask.Response:
+    """Create a new ladder."""
     req = flask.request
     if not require(['name']) or req.json['name'] != ladder:
         flask.abort(400)
+    try:
+        user_id = get_uid()
+    except oauth2client.crypt.AppIdentityError:
+        flask.abort(401)
     cursor = flask.g.dbh.cursor()
     with flask.g.dbh:
-        cursor.execute('replace into ladders (name, mu, sigma, tau, '
+        cursor.execute('insert into ladders (name, mu, sigma, tau, '
                        'draw_probability) values (?, ?, ?, ?, ?)',
                        [req.json['name'], req.json.get('mu', 1200),
                         req.json.get('sigma', 200), req.json.get('tau', 12),
                         req.json.get('draw_probability', 0)])
+        cursor.execute('insert into owners (user_id, ladder) values (?, ?)',
+                       [user_id, ladder])
+    return flask.jsonify({'result': 'ok'}), 201
+
+
+@app.route('/<ladder>/settings', methods=['POST'])
+def settings(ladder: str) -> flask.Response:
+    """Change settings of a ladder."""
+    req = flask.request
+    if not require(['name']) or req.json['name'] != ladder:
+        flask.abort(400)
+    if not owned(ladder):
+        flask.abort(401)
+    cursor = flask.g.dbh.cursor()
+    with flask.g.dbh:
+        cursor.execute('update ladders set mu=?, sigma=?, tau=?, '
+                       'draw_probability=?, last_ranking=? where name =?',
+                       [req.json.get('mu', 1200),
+                        req.json.get('sigma', 200),
+                        req.json.get('tau', 12),
+                        req.json.get('draw_probability', 0),
+                        0,
+                        req.json['name']
+                       ])
+        cursor.execute('update players set mu=?, sigma=? where ladder=?',
+                       [req.json.get('mu', 1200),
+                        req.json.get('sigma', 200),
+                        ladder
+                       ])
     return flask.jsonify({'result': 'ok'}), 201
 
 
