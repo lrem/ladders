@@ -1,0 +1,79 @@
+<md-sidenav-container>
+  <md-toolbar color="primary">
+    <button class="app-icon-button" (click)="sidenav.toggle()">
+      <i class="material-icons app-toolbar-menu">menu</i>
+    </button>
+    Ladders
+  </md-toolbar>
+  <md-sidenav #sidenav>
+    <div class="g-signin2" data-scope="openid email"
+      data-onsuccess="onSignIn"></div>
+  </md-sidenav>
+  <div class="app-content">
+    <form (ngSubmit)="onSubmit()">
+      <table>
+        <tr>
+          <td>Ladder name</td>
+          <td><input type="text"
+                     [(ngModel)]="ladder"
+                     placeholder="A single lowercase word"
+                     pattern="[a-z]+"
+                     name="name"></td>
+        </tr>
+        <tr>
+          <td>Draw probability</td>
+          <td><input type="number"
+                     [(ngModel)]="draw_probability"
+                     min="0"
+                     max="1"
+                     name="draw_probability"></td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">
+            Optional advanced properties
+          </td>
+        </tr>
+        <tr>
+        <tr>
+          <td>&mu; (average skill)</td>
+          <td><input type="number"
+                     [(ngModel)]="mu"
+                     min="5"
+                     name="mu"></td>
+        </tr>
+        <tr>
+          <td>&sigma; (standard deviation)</td>
+          <td><input type="number"
+                     [(ngModel)]="sigma"
+                     min="2"
+                     name="sigma"></td>
+        </tr>
+        <tr>
+          <td>&beta; (skill distance witd 76% win chance)</td>
+          <td><input type="number"
+                     [(ngModel)]="beta"
+                     min="1"
+                     name="beta"></td>
+        </tr>
+        <tr>
+          <td>&tau; (fixation cap)</td>
+          <td><input type="number"
+                     [(ngModel)]="tau"
+                     min="0.02"
+                     step="0.02"
+                     name="tau"></td>
+        </tr>
+      </table>
+      <button *ngIf="!submitting" type="submit">Create tde ladder</button>
+      <md-progress-bar *ngIf="submitting" mode="indeterminate">
+      </md-progress-bar>
+    </form>
+
+    <p>
+    Note: rules of many games do not even allow tde game to end in a draw,
+    in such a case tde <em>draw_probability</em> value is 0.
+    For most otder games it is still very low,
+    e.g. for football (soccer) it seems to be only 0.26.
+    </p>
+  </div>
+</md-sidenav-container>

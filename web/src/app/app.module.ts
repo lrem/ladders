@@ -5,7 +5,8 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { MaterialModule} from '@angular/material';
 
-import { AppComponent, LadderComponent, GameDialog, RankingComponent, MatchesComponent} from './app.component';
+import { AppComponent, LadderComponent, GameDialog, RankingComponent,
+  MatchesComponent, CreateComponent} from './app.component';
 
 @NgModule({
   declarations: [
@@ -14,9 +15,11 @@ import { AppComponent, LadderComponent, GameDialog, RankingComponent, MatchesCom
     GameDialog,
     RankingComponent,
     MatchesComponent,
+    CreateComponent,
   ],
   entryComponents: [
     AppComponent,
+    CreateComponent,
     GameDialog,
   ],
   imports: [
@@ -25,9 +28,8 @@ import { AppComponent, LadderComponent, GameDialog, RankingComponent, MatchesCom
     HttpModule,
     MaterialModule,
     RouterModule.forRoot([
-      {
-        path: 'ladder/:ladder', component:LadderComponent
-      },
+      {path: 'ladder/:ladder', component:LadderComponent},
+      {path: 'create', component:CreateComponent},
     ]),
   ],
   providers: [],

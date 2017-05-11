@@ -2,7 +2,7 @@ import { Component, Input, Output, ViewChild, NgZone } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {Http, Response, RequestOptions, Headers, Request, RequestMethod} from '@angular/http';
-import {MdDialog, MdDialogRef} from '@angular/material';
+import {MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
 import { Location } from '@angular/common';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/Rx' ;
@@ -151,13 +151,60 @@ export class LadderComponent {
 }
 
 @Component({
+  selector: 'create',
+  templateUrl: './create.component.html',
+  styleUrls: ['./create.component.css'],
+})
+export class CreateComponent {
+  public id_token;
+  public ladder: string;
+  public mu = 1200;
+  public sigma = 400;
+  public beta = 200;
+  public tau = 4;
+  public draw_probability = 0;
+  public submitting = false;
+  constructor(private http: Http,
+              private ngZone: NgZone,
+              private snackBar: MdSnackBar,
+             ) {
+    window['onSignIn'] =
+      (googleUser) => ngZone.run(() => this.onSignIn(googleUser));
+  }
+  onSignIn(googleUser) {
+    let id_token = googleUser.getAuthResponse().id_token;
+    this.id_token = id_token
+  }
+  onSubmit() {
+    this.submitting = true;
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let settings = JSON.stringify({
+      name: this.ladder,
+      mu: this.mu,
+      sigma: this.sigma,
+      beta: this.beta,
+      tau: this.tau,
+      draw_probability: this.draw_probability,
+      idtoken: this.id_token,
+    });
+    this.http.post(`http://127.0.0.1:5000/${this.ladder}/create`,
+              settings, {headers: headers})
+              .toPromise()
+              .then(() => {
+                window.location.assign(`/ladder/${this.ladder}`);
+              })
+              .catch((error: any) => {
+                this.snackBar.open('Creation failed... Name already in use?',
+                                  'Dismiss', {duration: 5000});
+                this.submitting = false;
+              });
+  }
+}
+
+@Component({
     selector: 'app-root',
     template: `<router-outlet></router-outlet>`,
     //templateUrl: './app.component.html'
 })
-/*
-@RouteConfig([
-  {path:'/ladder/:ladder', name:'Ladder', component:LadderComponent}
-])
-*/
 export class AppComponent { }
