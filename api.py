@@ -30,10 +30,13 @@ def create(ladder: str) -> flask.Response:
         flask.abort(401)
     cursor = flask.g.dbh.cursor()
     with flask.g.dbh:
-        cursor.execute('insert into ladders (name, mu, sigma, tau, '
-                       'draw_probability) values (?, ?, ?, ?, ?)',
-                       [req.json['name'], req.json.get('mu', 1200),
-                        req.json.get('sigma', 200), req.json.get('tau', 12),
+        cursor.execute('insert into ladders (name, mu, sigma, beta, tau, '
+                       'draw_probability) values (?, ?, ?, ?, ?, ?)',
+                       [req.json['name'],
+                        req.json.get('mu', 1200),
+                        req.json.get('sigma', 400),
+                        req.json.get('beta', 200),
+                        req.json.get('tau', 4),
                         req.json.get('draw_probability', 0)])
         cursor.execute('insert into owners (user_id, ladder) values (?, ?)',
                        [user_id, ladder])
@@ -53,15 +56,16 @@ def settings(ladder: str) -> flask.Response:
         cursor.execute('update ladders set mu=?, sigma=?, tau=?, '
                        'draw_probability=?, last_ranking=? where name =?',
                        [req.json.get('mu', 1200),
-                        req.json.get('sigma', 200),
-                        req.json.get('tau', 12),
+                        req.json.get('sigma', 400),
+                        req.json.get('beta', 200),
+                        req.json.get('tau', 4),
                         req.json.get('draw_probability', 0),
                         0,
                         req.json['name']
                        ])
         cursor.execute('update players set mu=?, sigma=? where ladder=?',
                        [req.json.get('mu', 1200),
-                        req.json.get('sigma', 200),
+                        req.json.get('sigma', 400),
                         ladder
                        ])
     return flask.jsonify({'result': 'ok'}), 201
@@ -242,11 +246,11 @@ def ladder_exists(ladder: str) -> bool:
 def recalculate(ladder: str) -> None:
     """Update the ranking with all matches since last recalculate."""
     cursor = flask.g.dbh.cursor()
-    cursor.execute('select mu, sigma, tau, draw_probability, last_ranking '
+    cursor.execute('select mu, sigma, beta, tau, draw_probability, last_ranking '
                    'from ladders where name = ?', [ladder])
     conf = cursor.fetchone()
     tsh = trueskill.TrueSkill(mu=conf['mu'], sigma=conf['sigma'],
-                              tau=conf['tau'],
+                              beta=conf['beta'], tau=conf['tau'],
                               draw_probability=conf['draw_probability'])
     cursor.execute('select id, timestamp from games '
                    'where ladder=? and timestamp>?',
