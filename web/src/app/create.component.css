@@ -1,4 +1,4 @@
 .app-content {
-  width: 42em;
+  max-width: 42em;
   margin: auto;
 }
