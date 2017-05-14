@@ -1,6 +1,6 @@
 import { Component, Input, Output, Inject, ViewChild, NgZone } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Http, Response, RequestOptions, Headers, Request, RequestMethod } from '@angular/http';
 import { MdDialog, MdDialogRef, MD_DIALOG_DATA, MdSnackBar } from '@angular/material';
 import { Location } from '@angular/common';
@@ -12,14 +12,14 @@ import 'rxjs/Rx';
   selector: 'app-game',
   templateUrl: './game.component.html',
 })
-export class GameDialog {
+export class GameDialogComponent {
   public ladder: string;
   public submitting = false;
   public teams_count = 2;
   public players_per_team = 1;
   public players = [[{ name: '' }], [{ name: '' }]];
   constructor(public http: Http,
-    public dialogRef: MdDialogRef<GameDialog>,
+    public dialogRef: MdDialogRef<GameDialogComponent>,
     @Inject(MD_DIALOG_DATA) data: any) {
     this.http = http;
     this.ladder = data.ladder;
@@ -40,12 +40,11 @@ export class GameDialog {
 
 @Component({
   selector: 'app-ranking',
-  inputs: ['ladder'],
   styleUrls: ['./app.component.css'],
   templateUrl: './ranking.component.html'
 })
-export class RankingComponent {
-  public ladder: string;
+export class RankingComponent implements OnInit {
+  @Input() public ladder: string;
   public ranking: Object;
   public ready = false;
   public math = Math;
@@ -71,15 +70,15 @@ export class RankingComponent {
 
 @Component({
   selector: 'app-matches',
-  inputs: ['ladder', 'owned', 'id_token'],
   styleUrls: ['./app.component.css'],
   templateUrl: './matches.component.html',
 })
-export class MatchesComponent {
-  public ladder: string;
+export class MatchesComponent implements OnInit {
+  @Input() public ladder: string;
+  @Input() public owned: boolean;
+  @Input() public id_token;
   public matchList: Object;
   public ready = false;
-  public id_token;
   constructor(private http: Http,
   ) { }
   ngOnInit() {
@@ -112,7 +111,7 @@ export class MatchesComponent {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class LadderComponent {
+export class LadderComponent implements OnInit {
   @ViewChild(RankingComponent) ranking: RankingComponent;
   @ViewChild(MatchesComponent) matches: MatchesComponent;
   public ladder: string;
@@ -131,7 +130,7 @@ export class LadderComponent {
     this.route.params.subscribe(params => this.ladder = params['ladder']);
   }
   openGameDialog() {
-    const dialogRef = this.gameDialog.open(GameDialog,
+    const dialogRef = this.gameDialog.open(GameDialogComponent,
       { data: { ladder: this.ladder } });
     dialogRef.afterClosed().subscribe(result => { this.reload(); });
   }

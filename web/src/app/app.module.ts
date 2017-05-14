@@ -6,14 +6,14 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { MaterialModule} from '@angular/material';
 
-import { AppComponent, LadderComponent, GameDialog, RankingComponent,
+import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
   MatchesComponent, CreateComponent} from './app.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LadderComponent,
-    GameDialog,
+    GameDialogComponent,
     RankingComponent,
     MatchesComponent,
     CreateComponent,
@@ -21,7 +21,7 @@ import { AppComponent, LadderComponent, GameDialog, RankingComponent,
   entryComponents: [
     AppComponent,
     CreateComponent,
-    GameDialog,
+    GameDialogComponent,
   ],
   imports: [
     BrowserModule,
