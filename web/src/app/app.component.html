@@ -12,9 +12,9 @@
     <button onclick="signOut();">Sign out</button>
   </md-sidenav>
   <div class="app-content">
-    <ranking [ladder]="this.ladder">Loading.</ranking>
-    <matches [ladder]="this.ladder" [owned]="this.owned"
-       [id_token]="this.id_token">Loading.</matches>
+    <app-ranking [ladder]="this.ladder">Loading.</app-ranking>
+    <app-matches [ladder]="this.ladder" [owned]="this.owned"
+       [id_token]="this.id_token">Loading.</app-matches>
   </div>
 </md-sidenav-container>
 

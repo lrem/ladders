@@ -9,7 +9,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/Rx';
 
 @Component({
-  selector: 'game',
+  selector: 'app-game',
   templateUrl: './game.component.html',
 })
 export class GameDialog {
@@ -29,7 +29,7 @@ export class GameDialog {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
     const result = JSON.stringify({ 'outcome': this.players });
-    console.debug(result);
+    // console.debug(result);
     this.http.post(`http://127.0.0.1:5000/${this.ladder}/game`,
       result, { headers: headers }).subscribe(() => {
         this.dialogRef.close();
@@ -39,7 +39,7 @@ export class GameDialog {
 
 
 @Component({
-  selector: 'ranking',
+  selector: 'app-ranking',
   inputs: ['ladder'],
   styleUrls: ['./app.component.css'],
   templateUrl: './ranking.component.html'
@@ -62,7 +62,7 @@ export class RankingComponent {
           this.ranking = json.ranking;
           this.ready = true
         } else {
-          console.debug(`${this.ladder} does not exist`);
+          // console.debug(`${this.ladder} does not exist`);
           this.ready = true
         }
       });
@@ -70,7 +70,7 @@ export class RankingComponent {
 }
 
 @Component({
-  selector: 'matches',
+  selector: 'app-matches',
   inputs: ['ladder', 'owned', 'id_token'],
   styleUrls: ['./app.component.css'],
   templateUrl: './matches.component.html',
@@ -93,7 +93,7 @@ export class MatchesComponent {
           this.matchList = json.matches;
           this.ready = true
         } else {
-          console.debug(`${this.ladder} does not exist`);
+          // console.debug(`${this.ladder} does not exist`);
           this.ready = true
         }
       });
@@ -108,7 +108,7 @@ export class MatchesComponent {
 }
 
 @Component({
-  selector: 'ladder',
+  selector: 'app-ladder',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -153,7 +153,7 @@ export class LadderComponent {
 }
 
 @Component({
-  selector: 'create',
+  selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css'],
 })
@@ -207,6 +207,6 @@ export class CreateComponent {
 @Component({
   selector: 'app-root',
   template: `<router-outlet></router-outlet>`,
-  //templateUrl: './app.component.html'
+  // templateUrl: './app.component.html'
 })
 export class AppComponent { }
