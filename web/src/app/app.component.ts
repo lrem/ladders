@@ -1,9 +1,10 @@
-import { Component, Input, Output, ViewChild, NgZone } from '@angular/core';
+import { Component, Input, Output, Inject, ViewChild, NgZone } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {Http, Response, RequestOptions, Headers, Request, RequestMethod} from '@angular/http';
-import {MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+import {MdDialog, MdDialogRef, MD_DIALOG_DATA, MdSnackBar} from '@angular/material';
 import { Location } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/Rx' ;
 
@@ -18,9 +19,10 @@ export class GameDialog {
   public players_per_team = 1;
   public players = [[{name: ''}], [{name: ''}]];
   constructor(public http: Http,
-              public dialogRef: MdDialogRef<GameDialog>) {
+              public dialogRef: MdDialogRef<GameDialog>,
+              @Inject(MD_DIALOG_DATA) data:any) {
     this.http = http;
-    this.ladder = this.dialogRef.config.data.ladder;
+    this.ladder = data.ladder;
   }
   onSubmit() {
     this.submitting = true;
