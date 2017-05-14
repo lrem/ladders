@@ -88,8 +88,8 @@ def submit(ladder: str) -> flask.Response:
             print('Tier %d members: %s' % (position, members))
             for member in members:
                 name = member['name']
-                cursor.execute('select count(*) from players where name = ?',
-                               [name])
+                cursor.execute('select count(*) from players where name=?'
+                               ' and ladder=?', [name, ladder])
                 if cursor.fetchone()[0] == 0:
                     cursor.execute(
                         'insert into players (name, ladder, mu, sigma) '
@@ -269,7 +269,7 @@ def recalculate(ladder: str) -> None:
             logging.info('%d: %s', position, player)
             if player not in players:
                 cursor.execute('select mu, sigma from players '
-                               'where name = ?', [player])
+                               'where name=? and ladder=?', [player, ladder])
                 skill = cursor.fetchone()
                 logging.info('Fetched player %s skill %s', player, skill)
                 players[player] = tsh.create_rating(
@@ -286,8 +286,9 @@ def recalculate(ladder: str) -> None:
                            'where name = ?', [max_timestamp, ladder])
         for name in players:
             cursor.execute('update players set mu = ?, sigma = ? '
-                           'where name = ?',
-                           [players[name].mu, players[name].sigma, name])
+                           'where name=? and ladder=?',
+                           [players[name].mu, players[name].sigma, name,
+                            ladder])
 
 
 def main():

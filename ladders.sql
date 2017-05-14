@@ -9,11 +9,12 @@ create table ladders (
 );
 
 create table players (
-    name text primary key,
+    name text not null,
     ladder text not null,
     mu float not null,
     sigma not null,
-    foreign key(ladder) references ladders(name)
+    foreign key(ladder) references ladders(name),
+    primary key(name, ladder)
 );
 
 create table games (
