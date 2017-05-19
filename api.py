@@ -219,6 +219,8 @@ def teardown_request(_exception: typing.Any) -> None:
 
 def get_uid() -> str:
     """Extract user id from token received by POST."""
+    if 'INTEGRATION_TEST' in os.environ:
+        return "dummy_test_uid"
     if not 'idtoken' in flask.request.json:
         raise oauth2client.crypt.AppIdentityError('No OAauth2 token.')
     token = flask.request.json['idtoken']
@@ -294,6 +296,12 @@ def recalculate(ladder: str) -> None:
 def main():
     """Main, a separate function for scoping."""
     logging.basicConfig(level=logging.INFO)
+    if 'INTEGRATION_TEST' in os.environ:
+        # Try to clean up a local debugging instance, ignore errors.
+        try:
+            os.remove('ladders.db')
+        except (FileNotFoundError, PermissionError):
+            pass
     if not os.path.exists('ladders.db'):
         dbh = sqlite3.connect('ladders.db')
         dbh.execute('PRAGMA foreign_keys = ON')
