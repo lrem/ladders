@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.6"
+before_install:
+  - nvm isntall 0.10
+install:
+  - pip install -r requirements.txt
+  - cd web
+  - npm install
+script:
+  - mypy --ignore-missing-imports api.py
+  - cd web
+  - ng build
+  - ng lint
