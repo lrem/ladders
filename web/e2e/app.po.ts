@@ -22,7 +22,7 @@ export class Ladder {
   }
 
   reportDuel(winner: string, loser: string) {
-    element(by.css(".app-action button")).click();
+   element(by.css('.app-action button')).click();
     browser.wait(ExpectedConditions.presenceOf(element(by.partialButtonText('Report'))), oneSecond);
     element(by.css('input[ng-reflect-name="name0.0"]')).sendKeys(winner);
     element(by.css('input[ng-reflect-name="name1.0"]')).sendKeys(loser);

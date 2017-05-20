@@ -2,8 +2,8 @@ import { browser, ExpectedConditions, promise } from 'protractor';
 import { Create, Ladder } from './app.po';
 
 describe('base flow', () => {
-  let ladder: Ladder = new Ladder();
-  let create: Create = new Create();
+  const ladder: Ladder = new Ladder();
+  const create: Create = new Create();
   const oneSecond = 1000;
 
   it('should create a ladder with default settings', () => {
@@ -17,7 +17,7 @@ describe('base flow', () => {
     ladder.navigateTo('foo');
     ladder.reportDuel('x', 'y');
     ladder.reportDuel('y', 'z');
-    let scorePromises = [
+    const scorePromises = [
       ladder.getScore('x'),
       ladder.getScore('y'),
       ladder.getScore('z'),
