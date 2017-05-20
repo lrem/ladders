@@ -8,6 +8,7 @@ install:
   - cd web
   - nvm use node
   - npm install
+  - cd ..
 script:
   - mypy --ignore-missing-imports api.py
   - cd web
