@@ -2,10 +2,11 @@ language: python
 python:
   - "3.6"
 before_install:
-  - nvm isntall 0.10
+  - nvm isntall node
 install:
   - pip install -r requirements.txt
   - cd web
+  - nvm use node
   - npm install
 script:
   - mypy --ignore-missing-imports api.py
