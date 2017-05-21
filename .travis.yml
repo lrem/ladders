@@ -17,7 +17,7 @@ install:
   - pip install -r requirements.txt
   - cd web
   - nvm use node
-  - npm install -g angular-cli
+  - npm install -g @angular/cli
   - npm install
   - cd ..
 script:
