@@ -2,6 +2,8 @@ language: python
 python:
   - "3.6"
 before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
   - nvm install node
 install:
   - pip install -r requirements.txt
@@ -11,6 +13,10 @@ install:
   - cd ..
 script:
   - mypy --ignore-missing-imports api.py
+  - python3 api.py &
   - cd web
   - ng build
   - ng lint
+  - ng serve &
+  - sleep 5 # In the odd case starting server takes longer than Chrome.
+  - ng e2e
