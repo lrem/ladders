@@ -8,6 +8,7 @@ export class Create {
   }
 
   setParameter(name: string, value: string) {
+    element(by.name(name)).clear();
     element(by.name(name)).sendKeys(value);
   }
 
@@ -22,10 +23,17 @@ export class Ladder {
   }
 
   reportDuel(winner: string, loser: string) {
-   element(by.css('.app-action button')).click();
+    this.reportGame([[winner], [loser]]);
+  }
+
+  reportGame(result: Array<Array<string>>) {
+    element(by.css('.app-action button')).click();
     browser.wait(ExpectedConditions.presenceOf(element(by.partialButtonText('Report'))), oneSecond);
-    element(by.css('input[ng-reflect-name="name0.0"]')).sendKeys(winner);
-    element(by.css('input[ng-reflect-name="name1.0"]')).sendKeys(loser);
+    for (let i = 0; i < result.length; i++) {
+      for (let j = 0; j < result[i].length; j++) {
+        element(by.css(`input[ng-reflect-name="name${i}.${j}"]`)).sendKeys(result[i][j]);
+      }
+    }
     element(by.partialButtonText('Report')).click();
     browser.wait(ExpectedConditions.not(ExpectedConditions.presenceOf(
       element(by.tagName('app-game')))), oneSecond);

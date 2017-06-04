@@ -1,4 +1,4 @@
-import { Component, Input, Output, Inject, ViewChild, NgZone } from '@angular/core';
+import { Component, Input, Output, Inject, ViewChild, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Http, Response, RequestOptions, Headers, Request, RequestMethod } from '@angular/http';
@@ -12,7 +12,7 @@ import 'rxjs/Rx';
   selector: 'app-game',
   templateUrl: './game.component.html',
 })
-export class GameDialogComponent {
+export class GameDialogComponent implements OnInit{
   public ladder: string;
   public submitting = false;
   public teams_count = 2;
@@ -29,11 +29,11 @@ export class GameDialogComponent {
       map(res => res.json()).
       subscribe(json => {
         if (json.exists) {
-          while(this.teams_count < json.teams_count) {
+          while (this.teams_count < json.teams_count) {
             this.addTeam();
             this.teams_count++;
           }
-          while(this.players_per_team < json.players_per_team) {
+          while (this.players_per_team < json.players_per_team) {
             this.addPlayer();
             this.players_per_team++;
           }
@@ -42,8 +42,8 @@ export class GameDialogComponent {
       console.log(`${this.teams_count} teams x ${this.players_per_team} players.`);
   }
   addTeam() {
-    let new_row = [];
-    for(let i = 0; i < this.players_per_team; i++) {
+    const new_row = [];
+    for (let i = 0; i < this.players_per_team; i++) {
       new_row.push({name: ''});
     }
     this.players.push(new_row);
