@@ -10,7 +10,7 @@ describe('base flow', () => {
     create.navigateTo();
     create.setParameter('name', 'foo');
     create.submit();
-    browser.wait(ExpectedConditions.urlContains('foo'), oneSecond);
+    browser.wait(ExpectedConditions.urlContains('foo'), 5 * oneSecond);
   });
 
   it('should make a simple transitive ranking', () => {
