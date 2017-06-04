@@ -12,7 +12,7 @@ import 'rxjs/Rx';
   selector: 'app-game',
   templateUrl: './game.component.html',
 })
-export class GameDialogComponent implements OnInit{
+export class GameDialogComponent implements OnInit {
   public ladder: string;
   public submitting = false;
   public teams_count = 2;
