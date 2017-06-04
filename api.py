@@ -94,6 +94,8 @@ def submit(ladder: str) -> flask.Response:
             print('Tier %d members: %s' % (position, members))
             for member in members:
                 name = member['name']
+                if not name:
+                    flask.abort(400)
                 cursor.execute('select count(*) from players where name=?'
                                ' and ladder=?', [name, ladder])
                 if cursor.fetchone()[0] == 0:
