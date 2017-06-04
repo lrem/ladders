@@ -59,21 +59,24 @@ def settings(ladder: str) -> flask.Response:
         cursor.execute('update ladders set mu=?, sigma=?, tau=?, '
                        'teams_count=?, players_per_team=?, '
                        'draw_probability=?, last_ranking=? where name =?',
-                       [req.json.get('mu', 1200),
-                        req.json.get('sigma', 400),
-                        req.json.get('beta', 200),
-                        req.json.get('tau', 4),
-                        req.json.get('teams_count', 2),
-                        req.json.get('players_per_team', 1),
-                        req.json.get('draw_probability', 0),
-                        0,
-                        req.json['name']
+                       [
+                           req.json.get('mu', 1200),
+                           req.json.get('sigma', 400),
+                           req.json.get('beta', 200),
+                           req.json.get('tau', 4),
+                           req.json.get('teams_count', 2),
+                           req.json.get('players_per_team', 1),
+                           req.json.get('draw_probability', 0),
+                           0,
+                           req.json['name']
                        ])
-        cursor.execute('update players set mu=?, sigma=? where ladder=?',
-                       [req.json.get('mu', 1200),
-                        req.json.get('sigma', 400),
-                        ladder
-                       ])
+        cursor.execute(
+            'update players set mu=?, sigma=? where ladder=?',
+            [
+                req.json.get('mu', 1200),
+                req.json.get('sigma', 400),
+                ladder
+            ])
     return flask.jsonify({'result': 'ok'}), 201
 
 
@@ -189,6 +192,7 @@ def ladder_owned(ladder: str) -> flask.Response:
     """Return whether the user is logged in and is the owner of the ladder."""
     return flask.jsonify(owned(ladder))
 
+
 def owned(ladder: str) -> bool:
     """Return whether the user is logged in and is the owner of the ladder."""
     try:
@@ -217,7 +221,7 @@ def match_shape(ladder: str) -> flask.Response:
     return flask.jsonify({'exists': True,
                           'teams_count': shape['teams_count'],
                           'players_per_team': shape['players_per_team'],
-                          })
+                         })
 
 
 @app.before_request

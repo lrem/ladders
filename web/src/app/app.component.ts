@@ -1,6 +1,6 @@
 import { Component, Input, Output, Inject, ViewChild, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Http, Response, RequestOptions, Headers, Request, RequestMethod } from '@angular/http';
 import { MdDialog, MdDialogRef, MD_DIALOG_DATA, MdSnackBar } from '@angular/material';
 import { Location } from '@angular/common';
