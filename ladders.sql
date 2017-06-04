@@ -5,6 +5,8 @@ create table ladders (
     beta float not null default 200,
     tau float not null default 4,
     draw_probability float not null default 0,
+    teams_count integer not null,
+    players_per_team integer not null,
     last_ranking integer not null default 0
 );
 

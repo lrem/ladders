@@ -24,6 +24,33 @@ export class GameDialogComponent {
     this.http = http;
     this.ladder = data.ladder;
   }
+  ngOnInit() {
+    this.http.get(`http://127.0.0.1:5000/${this.ladder}/match_shape`).
+      map(res => res.json()).
+      subscribe(json => {
+        if (json.exists) {
+          while(this.teams_count < json.teams_count) {
+            this.addTeam();
+            this.teams_count++;
+          }
+          while(this.players_per_team < json.players_per_team) {
+            this.addPlayer();
+            this.players_per_team++;
+          }
+        }
+      });
+      console.log(`${this.teams_count} teams x ${this.players_per_team} players.`);
+  }
+  addTeam() {
+    let new_row = [];
+    for(let i = 0; i < this.players_per_team; i++) {
+      new_row.push({name: ''});
+    }
+    this.players.push(new_row);
+  }
+  addPlayer() {
+    this.players.map(row => {row.push({name: ''})});
+  }
   onSubmit() {
     this.submitting = true;
     const headers = new Headers();
@@ -163,6 +190,8 @@ export class CreateComponent {
   public sigma = 400;
   public beta = 200;
   public tau = 4;
+  public teams_count = 2;
+  public players_per_team = 1;
   public draw_probability = 0;
   public submitting = false;
   constructor(private http: Http,
@@ -186,6 +215,8 @@ export class CreateComponent {
       sigma: this.sigma,
       beta: this.beta,
       tau: this.tau,
+      teams_count: this.teams_count,
+      players_per_team: this.players_per_team,
       draw_probability: this.draw_probability,
       idtoken: this.id_token,
     });

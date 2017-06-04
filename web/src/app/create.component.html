@@ -21,6 +21,22 @@
                      name="name"></td>
         </tr>
         <tr>
+          <td>Number of teams in a match</td>
+          <td><input type="number"
+                     [(ngModel)]="teams_count"
+                     min="2"
+                     step="1"
+                     name="teams_count"></td>
+        </tr>
+        <tr>
+          <td>Number of players in a team</td>
+          <td><input type="number"
+                     [(ngModel)]="players_per_team"
+                     min="1"
+                     step="1"
+                     name="players_per_team"></td>
+        </tr>
+        <tr>
           <td>Draw probability</td>
           <td><input type="number"
                      [(ngModel)]="draw_probability"

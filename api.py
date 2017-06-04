@@ -31,12 +31,15 @@ def create(ladder: str) -> flask.Response:
     cursor = flask.g.dbh.cursor()
     with flask.g.dbh:
         cursor.execute('insert into ladders (name, mu, sigma, beta, tau, '
-                       'draw_probability) values (?, ?, ?, ?, ?, ?)',
+                       'teams_count, players_per_team, '
+                       'draw_probability) values (?, ?, ?, ?, ?, ?, ?, ?)',
                        [req.json['name'],
                         req.json.get('mu', 1200),
                         req.json.get('sigma', 400),
                         req.json.get('beta', 200),
                         req.json.get('tau', 4),
+                        req.json.get('teams_count', 2),
+                        req.json.get('players_per_team', 1),
                         req.json.get('draw_probability', 0)])
         cursor.execute('insert into owners (user_id, ladder) values (?, ?)',
                        [user_id, ladder])
@@ -54,11 +57,14 @@ def settings(ladder: str) -> flask.Response:
     cursor = flask.g.dbh.cursor()
     with flask.g.dbh:
         cursor.execute('update ladders set mu=?, sigma=?, tau=?, '
+                       'teams_count=?, players_per_team=?, '
                        'draw_probability=?, last_ranking=? where name =?',
                        [req.json.get('mu', 1200),
                         req.json.get('sigma', 400),
                         req.json.get('beta', 200),
                         req.json.get('tau', 4),
+                        req.json.get('teams_count', 2),
+                        req.json.get('players_per_team', 1),
                         req.json.get('draw_probability', 0),
                         0,
                         req.json['name']
@@ -194,6 +200,22 @@ def owned(ladder: str) -> bool:
         logging.info('Auth exception: ' + str(exception))
         result = False
     return result
+
+
+@app.route('/<ladder>/match_shape', methods=['GET'])
+def match_shape(ladder: str) -> flask.Response:
+    """Return the default team shape as stored in ladder settings."""
+    if not ladder_exists(ladder):
+        return flask.jsonify({'exists': False})
+    cursor = flask.g.dbh.cursor()
+    cursor.execute(
+        'select teams_count, players_per_team from ladders where name=?',
+        [ladder])
+    shape = cursor.fetchone()
+    return flask.jsonify({'exists': True,
+                          'teams_count': shape['teams_count'],
+                          'players_per_team': shape['players_per_team'],
+                          })
 
 
 @app.before_request
