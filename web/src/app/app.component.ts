@@ -8,6 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/Rx';
 
+import { environment } from '../environments/environment'
+
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -25,7 +27,7 @@ export class GameDialogComponent implements OnInit {
     this.ladder = data.ladder;
   }
   ngOnInit() {
-    this.http.get(`http://127.0.0.1:5000/${this.ladder}/match_shape`).
+    this.http.get(`${environment.backend}/${this.ladder}/match_shape`).
       map(res => res.json()).
       subscribe(json => {
         if (json.exists) {
@@ -57,7 +59,7 @@ export class GameDialogComponent implements OnInit {
     headers.append('Content-Type', 'application/json');
     const result = JSON.stringify({ 'outcome': this.players });
     // console.debug(result);
-    this.http.post(`http://127.0.0.1:5000/${this.ladder}/game`,
+    this.http.post(`${environment.backend}/${this.ladder}/game`,
       result, { headers: headers }).subscribe(() => {
         this.dialogRef.close();
       });
@@ -81,7 +83,7 @@ export class RankingComponent implements OnInit {
     this.reload()
   }
   reload() {
-    this.http.get(`http://127.0.0.1:5000/${this.ladder}/ranking`).
+    this.http.get(`${environment.backend}/${this.ladder}/ranking`).
       map(res => res.json()).
       subscribe(json => {
         if (json.exists) {
@@ -113,7 +115,7 @@ export class MatchesComponent implements OnInit {
     this.reload()
   }
   reload() {
-    this.http.get(`http://127.0.0.1:5000/${this.ladder}/matches`).
+    this.http.get(`${environment.backend}/${this.ladder}/matches`).
       map(res => res.json()).
       subscribe(json => {
         if (json.exists) {
@@ -135,7 +137,7 @@ export class MatchesComponent implements OnInit {
   remove(id) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    this.http.post(`http://127.0.0.1:5000/${this.ladder}/remove`,
+    this.http.post(`${environment.backend}/${this.ladder}/remove`,
       { id: id, idtoken: this.id_token }, { headers: headers })
       .subscribe(() => { this.reload(); });
   }
@@ -174,7 +176,7 @@ export class LadderComponent implements OnInit {
     this.id_token = id_token
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    this.http.post(`http://127.0.0.1:5000/${this.ladder}/owned`,
+    this.http.post(`${environment.backend}/${this.ladder}/owned`,
       { idtoken: id_token }, { headers: headers })
       .map(res => res.json()).subscribe(json => {
         this.owned = json;
@@ -228,7 +230,7 @@ export class CreateComponent {
       draw_probability: this.draw_probability,
       idtoken: this.id_token,
     });
-    this.http.post(`http://127.0.0.1:5000/${this.ladder}/create`,
+    this.http.post(`${environment.backend}/${this.ladder}/create`,
       settings, { headers: headers })
       .toPromise()
       .then(() => {
