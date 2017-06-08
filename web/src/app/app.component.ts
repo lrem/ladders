@@ -104,7 +104,8 @@ export class MatchesComponent implements OnInit {
   @Input() public ladder: string;
   @Input() public owned: boolean;
   @Input() public id_token;
-  public matchList: Object;
+  public matchList: Array<any>;
+  public teamsHeader: Array<any>;
   public ready = false;
   constructor(private http: Http,
   ) { }
@@ -117,6 +118,13 @@ export class MatchesComponent implements OnInit {
       subscribe(json => {
         if (json.exists) {
           this.matchList = json.matches;
+          let maxTeams = 0;
+          this.matchList.forEach((match) => {
+            if(match.outcome.length > maxTeams) {
+              maxTeams = match.outcome.length;
+            }
+          });
+          this.teamsHeader = new Array(maxTeams);
           this.ready = true
         } else {
           // console.debug(`${this.ladder} does not exist`);
