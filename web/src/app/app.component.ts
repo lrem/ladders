@@ -122,7 +122,7 @@ export class MatchesComponent implements OnInit {
           this.matchList = json.matches;
           let maxTeams = 0;
           this.matchList.forEach((match) => {
-            if(match.outcome.length > maxTeams) {
+            if (match.outcome.length > maxTeams) {
               maxTeams = match.outcome.length;
             }
           });
