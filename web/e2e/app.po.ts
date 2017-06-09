@@ -28,7 +28,7 @@ export class Ladder {
 
   reportGame(result: Array<Array<string>>) {
     element(by.css('.app-action button')).click();
-    browser.wait(ExpectedConditions.presenceOf(element(by.partialButtonText('Report'))), oneSecond);
+    browser.wait(ExpectedConditions.presenceOf(element(by.partialButtonText('Report'))), 5 * oneSecond);
     for (let i = 0; i < result.length; i++) {
       for (let j = 0; j < result[i].length; j++) {
         element(by.css(`input[ng-reflect-name="name${i}.${j}"]`)).sendKeys(result[i][j]);
@@ -36,7 +36,7 @@ export class Ladder {
     }
     element(by.partialButtonText('Report')).click();
     browser.wait(ExpectedConditions.not(ExpectedConditions.presenceOf(
-      element(by.tagName('app-game')))), oneSecond);
+      element(by.tagName('app-game')))), 5 * oneSecond);
   }
 
   getScore(name: string): promise.Promise<number> {
