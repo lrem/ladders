@@ -35,4 +35,10 @@ after_success:
   #- export GIT_TAG=build-$TRAVIS_BRANCH-$(date -u "+%Y-%m-%d-%H-%M-%S")-$TRAVIS_BUILD_NUMBER
   #- git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
   #- git push origin $GIT_TAG
+  - echo $TRAVIS_COMMIT
+  - echo $TRAVIS_BRANCH
+  - echo $TRAVIS_PULL_REQUEST
+  - git log
+  - git status
+  - exit 0
   - git push https://prod:${PROD_PWD}@ladders.lrem.net/git
