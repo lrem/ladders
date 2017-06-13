@@ -18,7 +18,7 @@ ACCEPTED_OAUTH_CLIENTS = (
 )
 
 
-@app.route('/<ladder>/create', methods=['POST'])
+@app.route('/api/<ladder>/create', methods=['POST'])
 def create(ladder: str) -> flask.Response:
     """Create a new ladder."""
     req = flask.request
@@ -46,7 +46,7 @@ def create(ladder: str) -> flask.Response:
     return flask.jsonify({'result': 'ok'}), 201
 
 
-@app.route('/<ladder>/settings', methods=['POST'])
+@app.route('/api/<ladder>/settings', methods=['POST'])
 def settings(ladder: str) -> flask.Response:
     """Change settings of a ladder."""
     req = flask.request
@@ -80,7 +80,7 @@ def settings(ladder: str) -> flask.Response:
     return flask.jsonify({'result': 'ok'}), 201
 
 
-@app.route('/<ladder>/game', methods=['POST'])
+@app.route('/api/<ladder>/game', methods=['POST'])
 def submit(ladder: str) -> flask.Response:
     """Submit game results."""
     if not require(['outcome']):
@@ -112,7 +112,7 @@ def submit(ladder: str) -> flask.Response:
     return flask.jsonify({'result': 'ok'}), 201
 
 
-@app.route('/<ladder>/remove', methods=['POST'])
+@app.route('/api/<ladder>/remove', methods=['POST'])
 def remove(ladder: str) -> flask.Response:
     """Remove a game from the history."""
     if not owned(ladder):
@@ -145,7 +145,7 @@ def remove(ladder: str) -> flask.Response:
     return flask.jsonify()
 
 
-@app.route('/<ladder>/ranking', methods=['GET'])
+@app.route('/api/<ladder>/ranking', methods=['GET'])
 def ranking(ladder: str) -> flask.Response:
     """Get the players ranked by their skill."""
     if not ladder_exists(ladder):
@@ -161,9 +161,9 @@ def ranking(ladder: str) -> flask.Response:
     return flask.jsonify(result)
 
 
-@app.route('/<ladder>/matches', methods=['GET'])
-@app.route('/<ladder>/matches/<count>', methods=['GET'])
-@app.route('/<ladder>/matches/<count>/<offset>', methods=['GET'])
+@app.route('/api/<ladder>/matches', methods=['GET'])
+@app.route('/api/<ladder>/matches/<count>', methods=['GET'])
+@app.route('/api/<ladder>/matches/<count>/<offset>', methods=['GET'])
 def matches(ladder: str, count=42, offset=0) -> flask.Response:
     """Get the most recent matches."""
     if not ladder_exists(ladder):
@@ -187,7 +187,7 @@ def matches(ladder: str, count=42, offset=0) -> flask.Response:
     return flask.jsonify({'exists': True, 'matches': result})
 
 
-@app.route('/<ladder>/owned', methods=['POST'])
+@app.route('/api/<ladder>/owned', methods=['POST'])
 def ladder_owned(ladder: str) -> flask.Response:
     """Return whether the user is logged in and is the owner of the ladder."""
     return flask.jsonify(owned(ladder))
@@ -208,7 +208,7 @@ def owned(ladder: str) -> bool:
     return result
 
 
-@app.route('/<ladder>/match_shape', methods=['GET'])
+@app.route('/api/<ladder>/match_shape', methods=['GET'])
 def match_shape(ladder: str) -> flask.Response:
     """Return the default team shape as stored in ladder settings."""
     if not ladder_exists(ladder):
