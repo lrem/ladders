@@ -32,7 +32,7 @@ script:
   - cd web
   - ng build
   - ng lint
-  - ng serve &
+  - ng serve -prod &
   - sleep 5 # In the odd case starting server takes longer than Chrome.
   - ng e2e
 after_success:
@@ -41,4 +41,4 @@ after_success:
   #- export GIT_TAG=build-$TRAVIS_BRANCH-$(date -u "+%Y-%m-%d-%H-%M-%S")-$TRAVIS_BUILD_NUMBER
   #- git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
   #- git push origin $GIT_TAG
-  - if [ $PROD ]; then git push https://prod:${PROD_PWD}@ladders.lrem.net/git fi
+  - if [ $PROD ]; then git push https://prod:${PROD_PWD}@ladders.lrem.net/git; fi
