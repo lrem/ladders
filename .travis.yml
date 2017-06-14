@@ -12,6 +12,12 @@ addons:
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
+  - if [[ $TRAVIS_BRANCH = "master" ]] &&
+       [[ $TRAVIS_PULL_REQUEST = "false" ]] &&
+       [[ $TRAVIS_REPO_SLUG = "lrem/ladders" ]]; then
+      export PROD=1;
+      git checkout master;
+    fi
   - nvm install node
 install:
   - pip install -r requirements.txt
@@ -35,10 +41,4 @@ after_success:
   #- export GIT_TAG=build-$TRAVIS_BRANCH-$(date -u "+%Y-%m-%d-%H-%M-%S")-$TRAVIS_BUILD_NUMBER
   #- git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
   #- git push origin $GIT_TAG
-  - echo $TRAVIS_COMMIT
-  - echo $TRAVIS_BRANCH
-  - echo $TRAVIS_PULL_REQUEST
-  - git log
-  - git status
-  - exit 0
-  - git push https://prod:${PROD_PWD}@ladders.lrem.net/git
+  - if [ $PROD ]; then git push https://prod:${PROD_PWD}@ladders.lrem.net/git fi
