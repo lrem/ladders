@@ -16,7 +16,6 @@ before_install:
        [[ $TRAVIS_PULL_REQUEST = "false" ]] &&
        [[ $TRAVIS_REPO_SLUG = "lrem/ladders" ]]; then
       export PROD=1;
-      git branch "build-${TRAVIS_BUILD_NUMBER}";
     fi
   - nvm install node
 install:
@@ -43,6 +42,7 @@ after_success:
   - if [ $PROD ]; then 
     git config --global user.email "builds@travis-ci.com";
     git config --global user.name "Travis CI";
+    git branch "build-${TRAVIS_BUILD_NUMBER}";
     git add -f dist/;
     git commit -m "Artifacts from Travis build ${TRAVIS_BUILD_NUMBER}.";
     git push https://prod:${PROD_PWD}@ladders.lrem.net/git/ladders;
