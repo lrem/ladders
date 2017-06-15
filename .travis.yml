@@ -42,7 +42,7 @@ after_success:
   - if [ $PROD ]; then 
     git config --global user.email "builds@travis-ci.com";
     git config --global user.name "Travis CI";
-    git branch "build-${TRAVIS_BUILD_NUMBER}";
+    git checkout -b "build-${TRAVIS_BUILD_NUMBER}";
     git add -f dist/;
     git commit -m "Artifacts from Travis build ${TRAVIS_BUILD_NUMBER}.";
     git push https://prod:${PROD_PWD}@ladders.lrem.net/git/ladders;
