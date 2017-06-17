@@ -245,6 +245,12 @@ export class CreateComponent {
 }
 
 @Component({
+  selector: 'app-static',
+  templateUrl: './tos.html',
+})
+export class ToSComponent { }
+
+@Component({
   selector: 'app-root',
   template: `<router-outlet></router-outlet>`,
   // templateUrl: './app.component.html'
