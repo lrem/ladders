@@ -1,1 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+    min-height: 42em;
+}
+
+.app-content {
+  padding: 20px;
+}
+
+.app-content:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.app-action {
+  display: block;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+ul.team {
+  margin: 1px;
+}
+
+ul.team li {
+  display: block;
+}
+
+@media(min-width:800px) {
+  md-card {
+    min-width: 40%;
+    width: auto;
+    float: left;
+    margin: 0 10px;
+  }
+}

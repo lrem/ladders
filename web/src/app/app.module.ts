@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule} from '@angular/material';
 
 import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
-  MatchesComponent, CreateComponent, ToSComponent} from './app.component';
+  MatchesComponent, CreateComponent, ToSComponent } from './app.component';
 
 @NgModule({
   declarations: [

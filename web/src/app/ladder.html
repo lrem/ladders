@@ -1,0 +1,9 @@
+  <div class="app-content">
+    <app-ranking [ladder]="this.ladder">Loading.</app-ranking>
+    <app-matches [ladder]="this.ladder" [owned]="this.owned"
+       [id_token]="this.id_token">Loading.</app-matches>
+  </div>
+
+<span class="app-action">
+  <button md-fab (click)="openGameDialog()"><md-icon>add</md-icon></button>
+</span>

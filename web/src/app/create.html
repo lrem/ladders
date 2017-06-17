@@ -1,0 +1,83 @@
+<div class="app-content">
+  <form (ngSubmit)="onSubmit()">
+    <table>
+      <tr>
+        <td>Ladder name</td>
+        <td><input type="text"
+                   [(ngModel)]="ladder"
+                   placeholder="A single lowercase word"
+                   pattern="[a-z]+"
+                   name="name"></td>
+      </tr>
+      <tr>
+        <td>Number of teams in a match</td>
+        <td><input type="number"
+                   [(ngModel)]="teams_count"
+                   min="2"
+                   step="1"
+                   name="teams_count"></td>
+      </tr>
+      <tr>
+        <td>Number of players in a team</td>
+        <td><input type="number"
+                   [(ngModel)]="players_per_team"
+                   min="1"
+                   step="1"
+                   name="players_per_team"></td>
+      </tr>
+      <tr>
+        <td>Draw probability</td>
+        <td><input type="number"
+                   [(ngModel)]="draw_probability"
+                   min="0"
+                   max="1"
+                   name="draw_probability"></td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center">
+          Optional advanced properties
+        </td>
+      </tr>
+      <tr>
+      <tr>
+        <td>&mu; (average skill)</td>
+        <td><input type="number"
+                   [(ngModel)]="mu"
+                   min="5"
+                   name="mu"></td>
+      </tr>
+      <tr>
+        <td>&sigma; (standard deviation)</td>
+        <td><input type="number"
+                   [(ngModel)]="sigma"
+                   min="2"
+                   name="sigma"></td>
+      </tr>
+      <tr>
+        <td>&beta; (skill distance with 76% win chance)</td>
+        <td><input type="number"
+                   [(ngModel)]="beta"
+                   min="1"
+                   name="beta"></td>
+      </tr>
+      <tr>
+        <td>&tau; (fixation cap)</td>
+        <td><input type="number"
+                   [(ngModel)]="tau"
+                   min="0.02"
+                   step="0.02"
+                   name="tau"></td>
+      </tr>
+    </table>
+    <button *ngIf="!submitting" type="submit">Create the ladder</button>
+    <md-progress-bar *ngIf="submitting" mode="indeterminate">
+    </md-progress-bar>
+  </form>
+
+  <p>
+  Note: rules of many games do not even allow the game to end in a draw,
+  in such a case the <em>draw_probability</em> value is 0.
+  For most other games it is still very low,
+  e.g. for football (soccer) it seems to be only 0.26.
+  </p>
+</div>

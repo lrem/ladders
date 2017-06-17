@@ -12,7 +12,7 @@ import { environment } from '../environments/environment'
 
 @Component({
   selector: 'app-game',
-  templateUrl: './game.component.html',
+  templateUrl: './game.html',
 })
 export class GameDialogComponent implements OnInit {
   public ladder: string;
@@ -69,8 +69,7 @@ export class GameDialogComponent implements OnInit {
 
 @Component({
   selector: 'app-ranking',
-  styleUrls: ['./app.component.css'],
-  templateUrl: './ranking.component.html'
+  templateUrl: './ranking.html'
 })
 export class RankingComponent implements OnInit {
   @Input() public ladder: string;
@@ -99,8 +98,7 @@ export class RankingComponent implements OnInit {
 
 @Component({
   selector: 'app-matches',
-  styleUrls: ['./app.component.css'],
-  templateUrl: './matches.component.html',
+  templateUrl: './matches.html',
 })
 export class MatchesComponent implements OnInit {
   @Input() public ladder: string;
@@ -145,8 +143,7 @@ export class MatchesComponent implements OnInit {
 
 @Component({
   selector: 'app-ladder',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './ladder.html',
 })
 export class LadderComponent implements OnInit {
   @ViewChild(RankingComponent) ranking: RankingComponent;
@@ -190,8 +187,8 @@ export class LadderComponent implements OnInit {
 
 @Component({
   selector: 'app-create',
-  templateUrl: './create.component.html',
-  styleUrls: ['./create.component.css'],
+  templateUrl: './create.html',
+  styleUrls: ['./create.css'],
 })
 export class CreateComponent {
   public id_token;
@@ -245,14 +242,15 @@ export class CreateComponent {
 }
 
 @Component({
-  selector: 'app-static',
+  selector: 'app-tos',
   templateUrl: './tos.html',
+  styleUrls: ['./create.css'],
 })
 export class ToSComponent { }
 
 @Component({
   selector: 'app-root',
-  template: `<router-outlet></router-outlet>`,
-  // templateUrl: './app.component.html'
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],
 })
 export class AppComponent { }
