@@ -7,7 +7,8 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule} from '@angular/material';
 
 import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
-  MatchesComponent, CreateComponent, ToSComponent } from './app.component';
+  MatchesComponent, CreateComponent, ToSComponent, LandingComponent,
+  FinderComponent} from './app.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,8 @@ import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
     MatchesComponent,
     CreateComponent,
     ToSComponent,
+    LandingComponent,
+    FinderComponent,
   ],
   entryComponents: [
     AppComponent,
@@ -33,7 +36,8 @@ import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
     RouterModule.forRoot([
       {path: 'ladder/:ladder', component: LadderComponent},
       {path: 'create', component: CreateComponent},
-      {path: 'tos', component: ToSComponent}
+      {path: 'tos', component: ToSComponent},
+      {path: '', component: LandingComponent},
     ]),
   ],
   providers: [],

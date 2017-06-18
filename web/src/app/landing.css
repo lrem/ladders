@@ -1,0 +1,14 @@
+@media(min-width:800px) {
+  md-card {
+    min-width: 14em;
+    width: 27.3%;
+    padding: 2%;
+    margin: 1%;
+    float: left;
+  }
+
+  .right {
+    float: right;
+  }
+}
+

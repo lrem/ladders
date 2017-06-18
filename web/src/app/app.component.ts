@@ -1,5 +1,5 @@
 import { Component, Input, Output, Inject, ViewChild, NgZone, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Http, Response, RequestOptions, Headers, Request, RequestMethod } from '@angular/http';
 import { MdDialog, MdDialogRef, MD_DIALOG_DATA, MdSnackBar } from '@angular/material';
@@ -240,6 +240,27 @@ export class CreateComponent {
       });
   }
 }
+
+@Component({
+  selector: 'app-finder',
+  templateUrl: './finder.html',
+})
+export class FinderComponent {
+  public name: string;
+  constructor(
+    private router: Router,
+  ) { }
+  go() {
+    this.router.navigate(['/ladder', this.name]);
+  }
+}
+
+@Component({
+  selector: 'app-landing',
+  templateUrl: './landing.html',
+  styleUrls: ['./landing.css'],
+})
+export class LandingComponent { }
 
 @Component({
   selector: 'app-tos',
