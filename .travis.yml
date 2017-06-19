@@ -45,5 +45,5 @@ after_success:
     git checkout -b "build-${TRAVIS_BUILD_NUMBER}";
     git add -f dist/;
     git commit -m "Artifacts from Travis build ${TRAVIS_BUILD_NUMBER}.";
-    git push https://prod:${PROD_PWD}@ladders.lrem.net/git/ladders;
+    git push --force https://prod:${PROD_PWD}@ladders.lrem.net/git/ladders;
     fi
