@@ -37,3 +37,14 @@ ul.team li {
     margin: 0 10px;
   }
 }
+
+footer {
+  display: block;
+  clear: both;
+  width: 100%;
+  background: #def;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  margin: auto;
+  text-align: center;
+}
