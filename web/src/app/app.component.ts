@@ -248,10 +248,21 @@ export class CreateComponent {
 export class FinderComponent {
   public name: string;
   constructor(
+    private http: Http,
     private router: Router,
+    private snackBar: MdSnackBar,
   ) { }
   go() {
-    this.router.navigate(['/ladder', this.name]);
+    this.http.get(`${environment.backend}/${this.name}/exists`).
+      map(res => res.json()).
+      subscribe(exists => {  // This is a single boolean.
+        if (exists) {
+          this.router.navigate(['/ladder', this.name]);
+        } else {
+          this.snackBar.open(`Ladder "${this.name}" does not exist.`,
+            'Dismiss', { duration: 5000 });
+        }
+      })
   }
 }
 

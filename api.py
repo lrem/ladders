@@ -267,6 +267,11 @@ def require(fields: typing.Iterable[str]) -> bool:
         field in flask.request.json for field in fields)
 
 
+@app.route('/api/<ladder>/exists', methods=['GET'])
+def exists_endpoint(ladder: str) -> flask.Response:
+    """Return whether the ladder exists."""
+    return flask.jsonify(ladder_exists(ladder))
+
 def ladder_exists(ladder: str) -> bool:
     """Check whether a ladder already exists."""
     return flask.g.dbh.execute('select count(*) from ladders where name = ?',
