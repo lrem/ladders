@@ -200,6 +200,7 @@ export class CreateComponent {
   public teams_count = 2;
   public players_per_team = 1;
   public draw_probability = 0;
+  public signed_in = !environment.production;  // Do not require sign in for testing.
   public submitting = false;
   constructor(private http: Http,
     private ngZone: NgZone,
@@ -210,7 +211,8 @@ export class CreateComponent {
   }
   onSignIn(googleUser) {
     const id_token = googleUser.getAuthResponse().id_token;
-    this.id_token = id_token
+    this.id_token = id_token;
+    this.signed_in = true;
   }
   onSubmit() {
     this.submitting = true;

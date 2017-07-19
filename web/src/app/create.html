@@ -1,4 +1,4 @@
-<div class="app-content">
+<div class="app-content" *ngIf="signed_in">
   <form (ngSubmit)="onSubmit()">
     <table>
       <tr>
@@ -80,4 +80,9 @@
   For most other games it is still very low,
   e.g. for football (soccer) it seems to be only 0.26.
   </p>
+</div>
+
+<div class="app-content" *ngIf="!signed_in">
+  In order to create a new ladder, you need to sign in.
+  <div class="g-signin2" data-scope="openid email" data-onsuccess="onSignIn"></div>
 </div>
