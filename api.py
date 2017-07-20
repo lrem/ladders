@@ -208,6 +208,22 @@ def owned(ladder: str) -> bool:
     return result
 
 
+@app.route('/api/user/owned_by', methods=['POST'])
+def owned_ladders():
+    """Return a list of names of ladders owned by the user."""
+    try:
+        user_id = get_uid()
+        cursor = flask.g.dbh.cursor()
+        cursor.execute(
+            'select ladder from owners where user_id = ?',
+            [user_id])
+        result = [row[0] for row in cursor.fetchall()]
+    except oauth2client.crypt.AppIdentityError as exception:
+        logging.info('Auth exception: ' + str(exception))
+        result = []
+    return flask.jsonify(result)
+
+
 @app.route('/api/<ladder>/match_shape', methods=['GET'])
 def match_shape(ladder: str) -> flask.Response:
     """Return the default team shape as stored in ladder settings."""

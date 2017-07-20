@@ -269,6 +269,37 @@ export class FinderComponent {
 }
 
 @Component({
+  selector: 'app-owned-list',
+  templateUrl: './owned.html'
+})
+export class OwnedListComponent {
+  public id_token;
+  public signed_in = false;
+  public landlord = false;
+  public estates: Array<string>;
+  constructor(
+    private http: Http,
+    private ngZone: NgZone,
+  ) {
+    window['onSignIn'] =
+      (googleUser) => ngZone.run(() => this.onSignIn(googleUser));
+  }
+  onSignIn(googleUser) {
+    const id_token = googleUser.getAuthResponse().id_token;
+    this.id_token = id_token;
+    this.signed_in = true;
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    this.http.post(`${environment.backend}/user/owned_by`,
+      { idtoken: id_token }, { headers: headers })
+      .map(res => res.json()).subscribe(json => {
+        this.estates = json;
+        this.landlord = this.estates.length > 0;
+      });
+  }
+}
+
+@Component({
   selector: 'app-landing',
   templateUrl: './landing.html',
   styleUrls: ['./landing.css'],

@@ -8,7 +8,7 @@ import { MaterialModule} from '@angular/material';
 
 import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
   MatchesComponent, CreateComponent, ToSComponent, LandingComponent,
-  FinderComponent} from './app.component';
+  FinderComponent, OwnedListComponent} from './app.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +21,7 @@ import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
     ToSComponent,
     LandingComponent,
     FinderComponent,
+    OwnedListComponent,
   ],
   entryComponents: [
     AppComponent,

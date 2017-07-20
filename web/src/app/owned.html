@@ -1,0 +1,8 @@
+<div *ngIf="landlord">
+    Owned ladders:
+    <md-list>
+        <md-list-item *ngFor="let estate of estates;">
+            <a href="/ladder/{{estate}}">{{estate}}</a>
+        </md-list-item>
+    </md-list>
+</div>
