@@ -239,6 +239,21 @@ def match_shape(ladder: str) -> flask.Response:
                           'players_per_team': shape['players_per_team'],
                          })
 
+@app.route('/api/<ladder>/suggest_players/', methods=['GET'])
+@app.route('/api/<ladder>/suggest_players/<prefix>', methods=['GET'])
+def suggest_players(ladder: str, prefix: str = "") -> flask.Response:
+    """Suggest a bunch of players with names starting with given prefix."""
+    if not ladder_exists(ladder):
+        return flask.jsonify({'exists': False})
+    cursor = flask.g.dbh.cursor()
+    cursor.execute(
+        'select name from players where ladder=? and name like ? limit 10',
+        [ladder, prefix + "%"])
+    return flask.jsonify({'exists': True,
+                          'names': [row[0] for row in cursor.fetchall()],
+                          })
+
+    
 
 @app.before_request
 def before_request() -> None:

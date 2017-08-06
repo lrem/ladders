@@ -5,6 +5,7 @@ import { Http, Response, RequestOptions, Headers, Request, RequestMethod } from 
 import { MdDialog, MdDialogRef, MD_DIALOG_DATA, MdSnackBar } from '@angular/material';
 import { Location } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/Rx';
 
@@ -66,6 +67,42 @@ export class GameDialogComponent implements OnInit {
   }
 }
 
+@Component({
+  selector: 'app-suggest-players',
+  templateUrl: './suggest_players.html',
+})
+export class SuggestPlayersComponent implements OnInit {
+  @Input() public ladder: string;
+  @Input() public players;  // Reference to the players table in parent.
+  @Input() public player_index: number;
+  @Input() public team_index: number;
+  public suggested: Array<string>;
+  public suggestionControl = new FormControl();
+  public auto: any;  // Set in template.
+  constructor(
+    public http: Http,
+  ) {}
+  ngOnInit() {
+    this.suggestionControl.valueChanges.subscribe(value => {this.suggest()});
+  }
+  suggest() {
+    let player: string;
+    try {
+       player = this.players[this.player_index][this.team_index].name;
+    } catch (e) {
+      player = '';
+    }
+    this.http.get(`${environment.backend}/${this.ladder}/suggest_players/${player}`).
+      map(res => res.json()).
+      subscribe(json => {
+        if (json.exists) {
+          this.suggested = json.names;
+        } else {
+          // Something is wrong.
+        }
+      });
+  }
+}
 
 @Component({
   selector: 'app-ranking',

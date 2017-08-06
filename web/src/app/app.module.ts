@@ -1,14 +1,14 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { MaterialModule} from '@angular/material';
 
 import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
   MatchesComponent, CreateComponent, ToSComponent, LandingComponent,
-  FinderComponent, OwnedListComponent} from './app.component';
+  FinderComponent, OwnedListComponent, SuggestPlayersComponent} from './app.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +22,7 @@ import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
     LandingComponent,
     FinderComponent,
     OwnedListComponent,
+    SuggestPlayersComponent,
   ],
   entryComponents: [
     AppComponent,
@@ -31,6 +32,7 @@ import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     MaterialModule,
     BrowserAnimationsModule,

@@ -31,7 +31,7 @@ export class Ladder {
     browser.wait(ExpectedConditions.presenceOf(element(by.partialButtonText('Report'))), 5 * oneSecond);
     for (let i = 0; i < result.length; i++) {
       for (let j = 0; j < result[i].length; j++) {
-        element(by.css(`input[ng-reflect-name="name${i}.${j}"]`)).sendKeys(result[i][j]);
+        element(by.css(`input[name="name${i}.${j}"]`)).sendKeys(result[i][j]);
       }
     }
     element(by.partialButtonText('Report')).click();
