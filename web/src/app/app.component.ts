@@ -157,6 +157,8 @@ export class MatchesComponent implements OnInit {
           this.matchList = json.matches;
           let maxTeams = 0;
           this.matchList.forEach((match) => {
+            match.timestamp = new Date(match.timestamp * 1000).
+              toLocaleString('en-GB');
             if (match.outcome.length > maxTeams) {
               maxTeams = match.outcome.length;
             }
