@@ -88,7 +88,7 @@ export class SuggestPlayersComponent implements OnInit {
   suggest() {
     let player: string;
     try {
-       player = this.players[this.player_index][this.team_index].name;
+       player = this.players[this.team_index][this.player_index].name;
     } catch (e) {
       player = '';
     }
