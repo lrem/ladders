@@ -14,6 +14,7 @@ import { environment } from '../environments/environment'
 @Component({
   selector: 'app-game',
   templateUrl: './game.html',
+  styleUrls: ['./game.css'],
 })
 export class GameDialogComponent implements OnInit {
   public ladder: string;

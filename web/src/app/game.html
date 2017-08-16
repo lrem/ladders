@@ -1,22 +1,22 @@
 <h1 md-dialog-title>Report a game in {{ladder}}</h1>
 <form (ngSubmit)="onSubmit()" #formCtrl="ngForm">
   <md-dialog-content>
-    <table>
-      <tr *ngFor="let team of players; let team_index=index">
-        <th *ngIf="team_index==0">Winner(s)</th>
-        <th *ngIf="team_index==1">2nd place</th>
-        <th *ngIf="team_index==2">3rd place</th>
-        <th *ngIf="team_index>=3">{{team_index+1}}th place</th>
-        <td *ngFor="let player of team; let player_index=index">
+    <div class="table">
+      <div class="row" *ngFor="let team of players; let team_index=index">
+        <div class="header" *ngIf="team_index==0">Winner(s)</div>
+        <div class="header" *ngIf="team_index==1">2nd place</div>
+        <div class="header" *ngIf="team_index==2">3rd place</div>
+        <div class="header" *ngIf="team_index>=3">{{team_index+1}}th place</div>
+        <div class="cell" *ngFor="let player of team; let player_index=index">
           <app-suggest-players 
             [ladder]="ladder"
             [players]="players"
             [player_index]="player_index" 
             [team_index]="team_index">
           </app-suggest-players>
-        </td>
-      </tr>
-    </table>
+        </div>
+      </div>
+    </div>
   </md-dialog-content>
   <md-dialog-actions>
     <button *ngIf="!submitting" type="submit" [disabled]="!formCtrl.form.valid">

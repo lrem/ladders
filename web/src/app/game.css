@@ -1,0 +1,34 @@
+/* Usually we want to see a table. */
+.table {
+    display: table;
+}
+
+.row {
+    display: table-row;
+}
+
+.cell, .header {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 1px;
+}
+
+.header {
+    font-weight: bold;
+}
+
+@media(max-width: 800px) {
+    /* On mobile, we want a more vertical layout. */
+    .table, .row, .cell, .header {
+        display: block;
+    }
+
+    .header {
+        float: left;
+    }
+
+    .cell {
+        float: right;
+        clear: right;
+    }
+}
