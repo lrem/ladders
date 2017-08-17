@@ -89,8 +89,13 @@ def submit(ladder: str) -> flask.Response:
     cursor.execute('select mu, sigma, tau, draw_probability '
                    'from ladders where name=?', [ladder])
     conf = cursor.fetchone()
+    try:
+        uid = get_uid()
+    except oauth2client.crypt.AppIdentityError:
+        uid = None
     with flask.g.dbh:  # Automatically commit/rollback.
-        cursor.execute('insert into games (ladder) values (?)', [ladder])
+        cursor.execute('insert into games (ladder, reporter_uid, reporter_ip) '
+                       'values (?,?,?)', [ladder, uid, flask.request.remote_addr])
         game = cursor.lastrowid
         print('Outcome:')
         for position, members in enumerate(flask.request.json['outcome']):
@@ -251,9 +256,9 @@ def suggest_players(ladder: str, prefix: str = "") -> flask.Response:
         [ladder, prefix + "%"])
     return flask.jsonify({'exists': True,
                           'names': [row[0] for row in cursor.fetchall()],
-                          })
+                         })
 
-    
+
 
 @app.before_request
 def before_request() -> None:

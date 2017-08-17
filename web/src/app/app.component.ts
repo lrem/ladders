@@ -18,6 +18,7 @@ import { environment } from '../environments/environment'
 })
 export class GameDialogComponent implements OnInit {
   public ladder: string;
+  public id_token;
   public submitting = false;
   public teams_count = 2;
   public players_per_team = 1;
@@ -27,6 +28,7 @@ export class GameDialogComponent implements OnInit {
     @Inject(MD_DIALOG_DATA) data: any) {
     this.http = http;
     this.ladder = data.ladder;
+    this.id_token = data.id_token;
   }
   ngOnInit() {
     this.http.get(`${environment.backend}/${this.ladder}/match_shape`).
@@ -59,7 +61,7 @@ export class GameDialogComponent implements OnInit {
     this.submitting = true;
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    const result = JSON.stringify({ 'outcome': this.players });
+    const result = JSON.stringify({ outcome: this.players, idtoken: this.id_token });
     // console.debug(result);
     this.http.post(`${environment.backend}/${this.ladder}/game`,
       result, { headers: headers }).subscribe(() => {
@@ -205,7 +207,7 @@ export class LadderComponent implements OnInit {
   }
   openGameDialog() {
     const dialogRef = this.gameDialog.open(GameDialogComponent,
-      { data: { ladder: this.ladder } });
+      { data: { ladder: this.ladder, id_token: this.id_token } });
     dialogRef.afterClosed().subscribe(result => { this.reload(); });
   }
   onSignIn(googleUser) {

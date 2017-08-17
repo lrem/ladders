@@ -26,6 +26,9 @@ create table games (
     foreign key(ladder) references ladders(name)
 );
 
+alter table games add column reporter_uid text;
+alter table games add column reporter_ip text;
+
 create table participants (
     game integer not null,
     player text not null,
@@ -37,8 +40,8 @@ create table participants (
 
 create table owners (
     user_id text,
-		ladder text,
-		foreign key(ladder) references ladders(name),
-		primary key(user_id, ladder)
+    ladder text,
+    foreign key(ladder) references ladders(name),
+    primary key(user_id, ladder)
 );
  
