@@ -180,7 +180,7 @@ def matches(ladder: str, count=42, offset=0) -> flask.Response:
     result = []
     for game in cursor.fetchall():
         gid, timestamp = game
-        outcome: defaultdict[int, typing.List[str]] = defaultdict(list)
+        outcome: typing.DefaultDict[int, typing.List[str]] = defaultdict(list)
         cursor.execute('select position, player from participants '
                        'where game = ?', [gid])
         for entry in cursor.fetchall():
