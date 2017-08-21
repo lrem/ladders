@@ -10,7 +10,7 @@
           <span *ngIf="team_index==2">3rd place</span>
           <span *ngIf="team_index>=3">{{team_index+1}}th place</span>
         </th>
-        <th *ngIf="this.owned">Remove</th>
+        <th *ngIf="this.owned">Moderation</th>
       </tr>
       <tr *ngFor="let match of matchList">
         <td>{{match.timestamp}}</td>    
@@ -22,6 +22,7 @@
           </ul>
         </td>
         <td *ngIf="this.owned">
+          {{match.reporter}}
           <button md-mini-fab (click)="remove(match.id)">
             <md-icon>delete</md-icon>
           </button>

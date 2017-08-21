@@ -153,7 +153,10 @@ export class MatchesComponent implements OnInit {
     this.reload()
   }
   reload() {
-    this.http.get(`${environment.backend}/${this.ladder}/matches`).
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    this.http.post(`${environment.backend}/${this.ladder}/matches`,
+      { idtoken: this.id_token }).
       map(res => res.json()).
       subscribe(json => {
         if (json.exists) {

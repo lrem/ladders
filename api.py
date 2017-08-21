@@ -3,6 +3,7 @@ import os
 import sqlite3
 import logging
 import typing
+import zlib
 from collections import defaultdict
 
 import flask  # type:ignore
@@ -166,20 +167,24 @@ def ranking(ladder: str) -> flask.Response:
     return flask.jsonify(result)
 
 
-@app.route('/api/<ladder>/matches', methods=['GET'])
-@app.route('/api/<ladder>/matches/<count>', methods=['GET'])
-@app.route('/api/<ladder>/matches/<count>/<offset>', methods=['GET'])
+@app.route('/api/<ladder>/matches', methods=['GET', 'POST'])
+@app.route('/api/<ladder>/matches/<count>', methods=['GET', 'POST'])
+@app.route('/api/<ladder>/matches/<count>/<offset>', methods=['GET', 'POST'])
 def matches(ladder: str, count=42, offset=0) -> flask.Response:
     """Get the most recent matches."""
     if not ladder_exists(ladder):
         return flask.jsonify({'exists': False})
     cursor = flask.g.dbh.cursor()
-    cursor.execute('select id, timestamp from games where ladder = ? '
+    cursor.execute('select id, timestamp, reporter_uid, reporter_ip from games where ladder = ? '
                    'order by timestamp desc limit ? offset ?',
                    [ladder, count, offset])
     result = []
     for game in cursor.fetchall():
-        gid, timestamp = game
+        gid, timestamp, reporter_uid, reporter_ip = game
+        if owned(ladder):
+            reporter = anonymize(reporter_uid, reporter_ip)
+        else:
+            reporter = None
         outcome: typing.DefaultDict[int, typing.List[str]] = defaultdict(list)
         cursor.execute('select position, player from participants '
                        'where game = ?', [gid])
@@ -187,9 +192,17 @@ def matches(ladder: str, count=42, offset=0) -> flask.Response:
             outcome[entry[0]].append(entry[1])
         result.append({'timestamp': timestamp,
                        'id': gid,
+                       'reporter': reporter,
                        'outcome': [outcome[i]
                                    for i in sorted(outcome.keys())]})
     return flask.jsonify({'exists': True, 'matches': result})
+
+
+def anonymize(user_uid: str, user_ip: str) -> str:
+    """Make a user-readable hashed identity."""
+    if user_uid:
+        return "Goog#%d" % (zlib.adler32(user_uid.encode()) % 10000,)
+    return "Anon#%d" % (zlib.adler32(user_ip.encode()) % 10000,)
 
 
 @app.route('/api/<ladder>/owned', methods=['POST'])
@@ -376,7 +389,7 @@ def main():
         dbh.execute('PRAGMA foreign_keys = ON')
         with open('ladders.sql') as schema:
             dbh.cursor().executescript(schema.read())
-    app.run(debug=True)
+    app.run(debug=False)
 
 
 if __name__ == '__main__':
