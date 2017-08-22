@@ -3,10 +3,11 @@ Flask==0.12.1
 itsdangerous==0.24
 Jinja2==2.9.6
 MarkupSafe==1.0
-mypy==0.501
+mypy
+pylint
 oauth2client==4.0.0
 six==1.10.0
 trueskill==0.4.4
 typed-ast==1.0.2
 Werkzeug==0.12.1
-uwsgi
+uwsgi==2.0.15

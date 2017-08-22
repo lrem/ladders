@@ -27,6 +27,7 @@ install:
   - cd ..
 script:
   - mypy --ignore-missing-imports api.py
+  - pylint api.py
   - python3 api.py &
   - cd web
   - ng build
