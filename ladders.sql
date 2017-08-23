@@ -19,6 +19,16 @@ create table players (
     primary key(name, ladder)
 );
 
+create table history (
+    ladder text not null,
+    player text not null,
+    timestamp integer not null,
+    mu float not null,
+    foreign key(ladder) references ladders(name),
+    foreign key(player) references players(name),
+    primary key (player, ladder, timestamp)
+);
+
 create table games (
     id integer primary key,
     ladder text not null,

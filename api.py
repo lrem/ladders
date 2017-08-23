@@ -198,6 +198,16 @@ def matches(ladder: str, count=42, offset=0) -> flask.Response:
     return flask.jsonify({'exists': True, 'matches': result})
 
 
+@app.route('/api/<ladder>/history/<player>', methods=['GET'])
+def history(ladder: str, player: str) -> flask.Response:
+    """Return a list of (timestamp, mu) pairs."""
+    cursor = flask.g.dbh.cursor()
+    cursor.execute('select timestamp, mu from history '
+                   'where ladder=? and player=? order by timestamp asc',
+                   [ladder, player])
+    return flask.jsonify([(row[0], row[1]) for row in cursor.fetchall()])
+
+
 def anonymize(user_uid: str, user_ip: str) -> str:
     """Make a user-readable hashed identity."""
     if user_uid:
@@ -347,7 +357,6 @@ class Ranking(object):
     def recalculate(self) -> None:
         """Update the ranking with all matches since last recalculate."""
         self._get_ladder()
-        max_timestamp = 0
         self.cursor.execute('select id, timestamp from games '
                             'where ladder=? and timestamp>?',
                             [self.ladder, self.last_ranking])
@@ -356,11 +365,12 @@ class Ranking(object):
                          game_id, timestamp)
             logging.info('%d %d %s', timestamp, self.last_ranking,
                          timestamp > self.last_ranking)
-            max_timestamp = max(max_timestamp, timestamp)
+            self.last_ranking = max(self.last_ranking, timestamp)
             names, skills, positions = self._get_game(game_id)
             new_ranks = self.tsh.rate(skills, ranks=positions)
             for player, skill in zip(names, new_ranks):
                 self.players[player] = skill[0]
+                self._record_history(player, skill[0], timestamp)
         self._update_ladder()
 
     def _get_ladder(self) -> None:
@@ -390,6 +400,10 @@ class Ranking(object):
             skills.append([self.players[player]])
             positions.append(position)
         return names, skills, positions
+
+    def _record_history(self, player: str, skill: trueskill.Rating, timestamp: int) -> None:
+        self.cursor.execute('insert into history (ladder, player, timestamp, '
+                            'mu) values (?,?,?,?)', [self.ladder, player, timestamp, skill.mu])
 
     def _update_ladder(self) -> None:
         """Update ladder with the newly computed ratings and last timestamp."""
