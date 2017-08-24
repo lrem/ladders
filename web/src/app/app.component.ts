@@ -168,6 +168,10 @@ export class HistoryDialogComponent implements OnInit {
         this.data = {
           chartType: 'Line',
           dataTable: json,
+          options: {
+            height: 400,
+            width: 600,
+          },
         }
       });
     }
