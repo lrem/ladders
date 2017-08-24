@@ -117,6 +117,7 @@ export class RankingComponent implements OnInit {
   public ready = false;
   public math = Math;
   constructor(private http: Http,
+    public historyDialog: MdDialog,
   ) { }
   ngOnInit() {
     this.reload()
@@ -134,6 +135,42 @@ export class RankingComponent implements OnInit {
         }
       });
   }
+  showHistory(player: string) {
+    const dialogRef = this.historyDialog.open(HistoryDialogComponent,
+      { data: { ladder: this.ladder, player: player } });
+  }
+}
+
+@Component({
+  selector: 'app-history',
+  templateUrl: './history.html'
+})
+export class HistoryDialogComponent implements OnInit {
+  public ladder: string;
+  public player: string;
+  public data;
+  constructor(public http: Http,
+    public dialogRef: MdDialogRef<HistoryDialogComponent>,
+    @Inject(MD_DIALOG_DATA) data: any) {
+    this.http = http;
+    this.ladder = data.ladder;
+    this.player = data.player;
+  }
+  ngOnInit() {
+    this.http.get(`${environment.backend}/${this.ladder}/history/${this.player}`).
+      map(res => res.json()).
+      subscribe(json => {
+        console.log(json);
+        json.forEach((pair) => {
+          pair[0] = new Date(pair[0] * 1000);
+        });
+        json.unshift(['Date', 'Skill']);
+        this.data = {
+          chartType: 'Line',
+          dataTable: json,
+        }
+      });
+    }
 }
 
 @Component({

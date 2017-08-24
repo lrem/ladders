@@ -5,10 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { MaterialModule} from '@angular/material';
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
   MatchesComponent, CreateComponent, ToSComponent, LandingComponent,
-  FinderComponent, OwnedListComponent, SuggestPlayersComponent} from './app.component';
+  FinderComponent, OwnedListComponent, SuggestPlayersComponent, HistoryDialogComponent} from './app.component';
 
 @NgModule({
   declarations: [
@@ -23,11 +24,13 @@ import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
     FinderComponent,
     OwnedListComponent,
     SuggestPlayersComponent,
+    HistoryDialogComponent,
   ],
   entryComponents: [
     AppComponent,
     CreateComponent,
     GameDialogComponent,
+    HistoryDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +39,7 @@ import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
     HttpModule,
     MaterialModule,
     BrowserAnimationsModule,
+    Ng2GoogleChartsModule,
     RouterModule.forRoot([
       {path: 'ladder/:ladder', component: LadderComponent},
       {path: 'create', component: CreateComponent},

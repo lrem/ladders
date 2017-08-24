@@ -11,6 +11,7 @@
         <th>{{index}}</th>    
         <td>{{player.name}}</td>
         <td>{{math.round(player.mu)}}</td>
+        <td><button md-raised-button (click)="showHistory(player.name)">History</button></td>
       </tr>
     </table>
     <p *ngIf="!ready">Loading ranking.</p>
