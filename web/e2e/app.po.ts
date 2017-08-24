@@ -10,6 +10,7 @@ export class Create {
   setParameter(name: string, value: string) {
     element(by.name(name)).clear();
     element(by.name(name)).sendKeys(value);
+    await sleep(10);
   }
 
   submit() {
@@ -40,7 +41,7 @@ export class Ladder {
   }
 
   getScore(name: string): promise.Promise<number> {
-    return element(by.xpath(`//td[normalize-space(text())="${name}"]/../td[last()]`))
+    return element(by.xpath(`//td[normalize-space(text())="${name}"]/../td[position()=2]`))
       .getText().then((value: string) => {
         return parseFloat(value);
       });
