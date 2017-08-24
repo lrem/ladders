@@ -10,7 +10,6 @@ export class Create {
   setParameter(name: string, value: string) {
     element(by.name(name)).clear();
     element(by.name(name)).sendKeys(value);
-    await sleep(10);
   }
 
   submit() {
