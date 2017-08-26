@@ -32,6 +32,7 @@ export class Ladder {
     for (let i = 0; i < result.length; i++) {
       for (let j = 0; j < result[i].length; j++) {
         element(by.css(`input[name="name${i}.${j}"]`)).sendKeys(result[i][j]);
+        browser.sleep(50);
       }
     }
     element(by.partialButtonText('Report')).click();
@@ -46,7 +47,6 @@ export class Ladder {
   }
 
   remove(position: number) {
-    //element(by.xpath(`md-icon[text()="delete"][position()=${position}]`)).click();
     element.all(by.css('td button')).get(position).click();
   }
 }
