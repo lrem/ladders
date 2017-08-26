@@ -39,10 +39,14 @@ export class Ladder {
       element(by.tagName('app-game')))), 5 * oneSecond);
   }
 
-  getScore(name: string): promise.Promise<number> {
-    return element(by.xpath(`//td[normalize-space(text())="${name}"]/../td[position()=2]`))
-      .getText().then((value: string) => {
-        return parseFloat(value);
-      });
+  async getScore(name: string): Promise<number> {
+    let text = await element(by.xpath(`//td[normalize-space(text())="${name}"]/../td[position()=2]`))
+    .getText();
+    return parseFloat(text);
+  }
+
+  remove(position: number) {
+    //element(by.xpath(`md-icon[text()="delete"][position()=${position}]`)).click();
+    element.all(by.css('td button')).get(position).click();
   }
 }

@@ -3,7 +3,7 @@ import { Create, Ladder } from './app.po';
 
 const oneSecond = 1000;
 
-describe('base flow', () => {
+describe('base flow', async () => {
   const ladder: Ladder = new Ladder();
   const create: Create = new Create();
 
@@ -14,20 +14,28 @@ describe('base flow', () => {
     browser.wait(ExpectedConditions.urlContains('foo'), 5 * oneSecond);
   });
 
-  it('should make a simple transitive ranking', () => {
+  it('should make a simple transitive ranking', async () => {
     ladder.navigateTo('foo');
     ladder.reportDuel('x', 'y');
     ladder.reportDuel('y', 'z');
-    const scorePromises = [
-      ladder.getScore('x'),
-      ladder.getScore('y'),
-      ladder.getScore('z'),
-    ];
-    promise.all(scorePromises).then((scores) => {
-      expect(scores[0]).toBeGreaterThan(scores[1]);
-      expect(scores[1]).toBeGreaterThan(scores[2]);
-    });
+    let x = await ladder.getScore('x');
+    let y = await ladder.getScore('y');
+    let z = await ladder.getScore('z');
+    expect(x).toBeGreaterThan(y);
+    expect(y).toBeGreaterThan(z);
   });
+
+  it('should forget players after deleting their matches', async () => {
+    ladder.navigateTo('foo');
+    ladder.reportDuel('a', 'b');
+    ladder.reportDuel('c', 'd');
+    ladder.reportDuel('b', 'a');
+    ladder.remove(1);  // The 'c' vs 'd' game.
+    let a = await ladder.getScore('a');
+    let b = await ladder.getScore('b');
+    expect(b).toBeGreaterThan(a);
+  });
+
 });
 
 describe('3v3 flow', () => {
@@ -43,25 +51,17 @@ describe('3v3 flow', () => {
     browser.wait(ExpectedConditions.urlContains('bar'), 5 * oneSecond);
   });
 
-  it('distributes points evenly', () => {
+  it('distributes points evenly', async () => {
     ladder.navigateTo('bar');
     ladder.reportGame([
       ['a', 'b', 'c'],
       ['d', 'e', 'f'],
       ['g', 'h', 'i']]);
-    const scorePromises = [
-      ladder.getScore('a'),
-      ladder.getScore('b'),
-      ladder.getScore('c'),
-      ladder.getScore('d'),
-      ladder.getScore('e'),
-      ladder.getScore('f'),
-      ladder.getScore('g'),
-      ladder.getScore('h'),
-      ladder.getScore('i'),
-    ];
-    promise.all(scorePromises).then((scores) => {
-      // Better teams get better scores.
+    let scores: Array<number> = [];
+    for(let name of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']) {
+      scores.push(await ladder.getScore(name));
+    }
+    // Better teams get better scores.
       expect(scores[0]).toBeGreaterThan(scores[3]);
       expect(scores[3]).toBeGreaterThan(scores[6]);
       // Scores are equal within teams.
@@ -71,36 +71,26 @@ describe('3v3 flow', () => {
       expect(scores[3]).toEqual(scores[5]);
       expect(scores[6]).toEqual(scores[7]);
       expect(scores[6]).toEqual(scores[8]);
-    });
   });
 
-  it('preserves predictable relations', () => {
+  it('preserves predictable relations', async () => {
     ladder.navigateTo('bar');
     ladder.reportGame([
       ['a', 'd', 'g'],
       ['b', 'e', 'h'],
       ['c', 'f', 'i']]);
-    const scorePromises = [
-      ladder.getScore('a'),
-      ladder.getScore('b'),
-      ladder.getScore('c'),
-      ladder.getScore('d'),
-      ladder.getScore('e'),
-      ladder.getScore('f'),
-      ladder.getScore('g'),
-      ladder.getScore('h'),
-      ladder.getScore('i'),
-    ];
-    promise.all(scorePromises).then((scores) => {
-      for (let i = 0; i < 3; i++) {
-        // Same before, better now.
-        expect(scores[3 * i]).toBeGreaterThan(scores[3 * i + 1]);
-        expect(scores[3 * i + 1]).toBeGreaterThan(scores[3 * i + 2]);
-        // Better before, same now.
-        expect(scores[i]).toBeGreaterThan(scores[i + 3]);
-        expect(scores[i + 3]).toBeGreaterThan(scores[i + 6]);
-      }
-    });
+    let scores: Array<number> = [];
+    for (let name of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']) {
+      scores.push(await ladder.getScore(name));
+    }
+    for (let i = 0; i < 3; i++) {
+      // Same before, better now.
+      expect(scores[3 * i]).toBeGreaterThan(scores[3 * i + 1]);
+      expect(scores[3 * i + 1]).toBeGreaterThan(scores[3 * i + 2]);
+      // Better before, same now.
+      expect(scores[i]).toBeGreaterThan(scores[i + 3]);
+      expect(scores[i + 3]).toBeGreaterThan(scores[i + 6]);
+    }
   })
 
 })
