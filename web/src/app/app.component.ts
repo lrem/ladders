@@ -171,6 +171,7 @@ export class HistoryDialogComponent implements OnInit {
           options: {
             height: 400,
             width: 600,
+            legend: {position: 'none'}
           },
         }
       });
@@ -248,6 +249,9 @@ export class LadderComponent implements OnInit {
   }
   ngOnInit() {
     this.route.params.subscribe(params => this.ladder = params['ladder']);
+    if (!environment.production) {
+      this.owned = true;
+    }
   }
   openGameDialog() {
     const dialogRef = this.gameDialog.open(GameDialogComponent,

@@ -1,6 +1,9 @@
 import {promise,  browser, element, by, ExpectedConditions } from 'protractor';
 
 const oneSecond = 1000;
+// Short enough to not slow the test down too much,
+// long enough to wait out Chrome's lags.
+const shortSleep = 50;
 
 export class Create {
   navigateTo() {
@@ -32,7 +35,7 @@ export class Ladder {
     for (let i = 0; i < result.length; i++) {
       for (let j = 0; j < result[i].length; j++) {
         element(by.css(`input[name="name${i}.${j}"]`)).sendKeys(result[i][j]);
-        browser.sleep(50);
+        browser.sleep(shortSleep);
       }
     }
     element(by.partialButtonText('Report')).click();
@@ -41,12 +44,19 @@ export class Ladder {
   }
 
   async getScore(name: string): Promise<number> {
-    let text = await element(by.xpath(`//td[normalize-space(text())="${name}"]/../td[position()=2]`))
+    const text = await element(by.xpath(`//td[normalize-space(text())="${name}"]/../td[position()=2]`))
     .getText();
     return parseFloat(text);
   }
 
+  async playerKnown(name: string): Promise<boolean> {
+    return await element.all(by.xpath(`//td[normalize-space(text())="${name}"`)).count() > 0;
+  }
+
   remove(position: number) {
-    element.all(by.css('td button')).get(position).click();
+    // This is stupidly likely to die on delays.
+    browser.refresh();
+    browser.sleep(oneSecond);
+    element.all(by.css('button.remove')).get(position).click();
   }
 }

@@ -141,10 +141,11 @@ def remove(ladder: str) -> flask.Response:
         cursor.execute('delete from participants where game = ?', [gid])
         cursor.execute('update ladders set last_ranking = 0 where name = ?',
                        [ladder])
-        cursor.execute('delete from history where ladder ?', [ladder])
+        cursor.execute('delete from history where ladder = ?', [ladder])
         cursor.execute('delete from players where ladder = ? '
-                       'and name not in (select player from participants)',
-                       [ladder])
+                       'and name not in '
+                       '(select player from participants where ladder=?)',
+                       [ladder, ladder])
         cursor.execute('select mu, sigma from ladders where name = ?',
                        [ladder])
         conf = cursor.fetchone()

@@ -18,9 +18,9 @@ describe('base flow', async () => {
     ladder.navigateTo('foo');
     ladder.reportDuel('x', 'y');
     ladder.reportDuel('y', 'z');
-    let x = await ladder.getScore('x');
-    let y = await ladder.getScore('y');
-    let z = await ladder.getScore('z');
+    const x = await ladder.getScore('x');
+    const y = await ladder.getScore('y');
+    const z = await ladder.getScore('z');
     expect(x).toBeGreaterThan(y);
     expect(y).toBeGreaterThan(z);
   });
@@ -31,9 +31,13 @@ describe('base flow', async () => {
     ladder.reportDuel('c', 'd');
     ladder.reportDuel('b', 'a');
     ladder.remove(1);  // The 'c' vs 'd' game.
-    let a = await ladder.getScore('a');
-    let b = await ladder.getScore('b');
+    ladder.navigateTo('foo'); // Force recalculation.
+    const a = await ladder.getScore('a');
+    const b = await ladder.getScore('b');
     expect(b).toBeGreaterThan(a);
+    // 'c' and 'd' should be forgotten by now.
+    expect(ladder.playerKnown('c')).toBeFalsy();
+    expect(ladder.playerKnown('d')).toBeFalsy();
   });
 
 });
@@ -57,8 +61,8 @@ describe('3v3 flow', () => {
       ['a', 'b', 'c'],
       ['d', 'e', 'f'],
       ['g', 'h', 'i']]);
-    let scores: Array<number> = [];
-    for(let name of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']) {
+    const scores: Array<number> = [];
+    for (const name of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']) {
       scores.push(await ladder.getScore(name));
     }
     // Better teams get better scores.
@@ -79,8 +83,8 @@ describe('3v3 flow', () => {
       ['a', 'd', 'g'],
       ['b', 'e', 'h'],
       ['c', 'f', 'i']]);
-    let scores: Array<number> = [];
-    for (let name of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']) {
+    const scores: Array<number> = [];
+    for (const name of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']) {
       scores.push(await ladder.getScore(name));
     }
     for (let i = 0; i < 3; i++) {

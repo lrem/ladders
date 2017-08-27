@@ -23,7 +23,7 @@
         </td>
         <td *ngIf="this.owned">
           {{match.reporter}}
-          <button md-mini-fab (click)="remove(match.id)">
+          <button md-mini-fab (click)="remove(match.id)" class="remove">
             <md-icon>delete</md-icon>
           </button>
         </td>
