@@ -1,0 +1,54 @@
+{
+    "version": "0.2.0",
+    /*
+    "compounds": [
+        {
+            "name": "Compound",
+            "configurations": ["Flask", "Chrome"]
+        }
+    ],
+    */
+    "configurations": [
+        {
+            "name": "Flask",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "pythonPath": "${config:python.pythonPath}",
+            "module": "flask.cli",
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "FLASK_APP": "${workspaceRoot}/api.py"
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload"
+            ],
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput"
+            ]
+        },
+        /*
+        {
+            "name": "Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:4200/#",
+            "port": 9223,
+            "sourceMaps": true,
+            "trace": true,
+            //"webRoot": "${workspaceRoot}/web",
+            "preLaunchTask": "serve",
+            "runtimeArgs": [
+                "--disable-session-crashed-bubble",
+                "--disable-infobars"
+            ],
+            "userDataDir": "${workspaceRoot}/.vscode/chrome"
+        }
+        */
+    ]
+}
+

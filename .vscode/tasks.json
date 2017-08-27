@@ -1,0 +1,81 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "taskName": "serve",
+            "identifier": "serve",
+            "type": "shell",
+            "command": "ng serve --sourcemaps",
+            "isBackground": true,
+            "options": {
+                "cwd": "${workspaceRoot}/web"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$tsc"
+            ]
+        },
+        {
+            "taskName": "wipe db",
+            "identifier": "wipe db",
+            "type": "shell",
+            "command": "rm ladders.db",
+            "windows": {
+                "command": "del ladders.db"
+            },
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "taskName": "flask",
+            "identifier": "flask",
+            "type": "shell",
+            "command": "python api.py",
+            "isBackground": true,
+            "options": {
+                "cwd": "${workspaceRoot}",
+                "env": {
+                    "INTEGRATION_TEST": 1
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "taskName": "lint",
+            "type": "shell",
+            "command": "ng lint",
+            "options": {
+                "cwd": "${workspaceRoot}/web"
+            },
+            "problemMatcher": [
+                "$tsc"
+            ]
+        },
+        {
+            "taskName": "e2e",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceRoot}/web"
+            },
+            "command": "ng e2e",
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+}

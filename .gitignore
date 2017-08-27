@@ -6,6 +6,7 @@ ladders.db
 __pycache__/
 *.py[cod]
 *$py.class
+.mypy_cache/
 
 # C extensions
 *.so
@@ -77,6 +78,10 @@ web/typings
 web/dist
 web/tmp
 web/out-tsc
+
+# Debugging crud
+
+.vscode/chrome
 
 # Temporary
 web.bak
