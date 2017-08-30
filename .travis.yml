@@ -9,6 +9,7 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
+  ssh_known_hosts: ladders.lrem.net
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
@@ -47,4 +48,4 @@ after_success:
     fi
 after_failure:
   - export RSYNC_PASSWORD=${DEV_PWD}
-  - yes | rsync -av screenshots dev@ladders.lrem.net:${TRAVIS_BUILD_NUMBER}
+  - rsync -av screenshots dev@ladders.lrem.net:${TRAVIS_BUILD_NUMBER}
