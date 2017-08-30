@@ -26,5 +26,14 @@ exports.config = {
   },
   onPrepare() {
     jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: true } }));
-  }
-};
+    return global.browser.getProcessedConfig().then(function (config) { });
+  },
+  plugins: [{
+    package: 'jasmine2-protractor-utils',
+    screenshotPath:'./screenshots',
+    disableHTMLReport: true,
+    disableScreenshot: false,
+    screenshotOnExpectFailure:true,
+    screenshotOnSpecFailure:true,
+    clearFoldersBeforeTest: true,
+}]};

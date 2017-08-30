@@ -82,6 +82,4 @@ web/out-tsc
 # Debugging crud
 
 .vscode/chrome
-
-# Temporary
-web.bak
+web/screenshots

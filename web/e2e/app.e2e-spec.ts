@@ -36,8 +36,8 @@ describe('base flow', async () => {
     const b = await ladder.getScore('b');
     expect(b).toBeGreaterThan(a);
     // 'c' and 'd' should be forgotten by now.
-    expect(ladder.playerKnown('c')).toBeFalsy();
-    expect(ladder.playerKnown('d')).toBeFalsy();
+    expect(await ladder.playerKnown('c')).toBeFalsy();
+    expect(await ladder.playerKnown('d')).toBeFalsy();
   });
 
 });

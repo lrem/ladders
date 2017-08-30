@@ -45,3 +45,6 @@ after_success:
     git commit -m "Artifacts from Travis build ${TRAVIS_BUILD_NUMBER}.";
     git push --force https://prod:${PROD_PWD}@ladders.lrem.net/git/ladders;
     fi
+after_failure:
+  - export RSYNC_PASSWORD=${DEV_PWD}
+  - rsync -av screenshots dev@ladders.lrem.net:${TRAVIS_BUILD_NUMBER}
