@@ -47,4 +47,4 @@ after_success:
     fi
 after_failure:
   - export RSYNC_PASSWORD=${DEV_PWD}
-  - rsync -av screenshots dev@ladders.lrem.net:${TRAVIS_BUILD_NUMBER}
+  - yes | rsync -av screenshots dev@ladders.lrem.net:${TRAVIS_BUILD_NUMBER}
