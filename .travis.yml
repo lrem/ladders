@@ -35,6 +35,7 @@ script:
   - ng lint
   - ng serve &
   - sleep 5 # In the odd case starting the server takes longer than Chrome.
+  - ng e2e
   - if [ $PROD ]; then ng build -prod -e prod; fi
 after_success:
   - if [ $PROD ]; then 
@@ -46,5 +47,7 @@ after_success:
     git push --force https://prod:${PROD_PWD}@ladders.lrem.net/git/ladders;
     fi
 after_failure:
-  - export RSYNC_PASSWORD=${DEV_PWD}
   - rsync -av screenshots dev@ladders.lrem.net:${TRAVIS_BUILD_NUMBER}
+  - for f in screenshots/*; do
+      curl -F "file=@$f;filename=${TRAVIS_BUILD_NUMBER}-$(basename $f)" http://prod:${PROD_PWD}@ladders.lrem.net/dev/;
+      done
