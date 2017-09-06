@@ -50,7 +50,7 @@ after_success:
     git push --force https://prod:${PROD_PWD}@ladders.lrem.net/git/ladders;
     fi
 after_failure:
-  - rsync -av screenshots dev@ladders.lrem.net:${TRAVIS_BUILD_NUMBER}
   - for f in screenshots/*; do
+      echo $f
       curl -F "file=@$f;filename=${TRAVIS_BUILD_NUMBER}-$(basename $f)" http://prod:${PROD_PWD}@ladders.lrem.net/dev/;
       done
