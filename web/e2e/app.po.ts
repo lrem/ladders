@@ -50,7 +50,7 @@ export class Ladder {
   }
 
   async playerKnown(name: string): Promise<boolean> {
-    return await element.all(by.xpath(`//td[normalize-space(text())="${name}"`)).count() > 0;
+    return await element.all(by.xpath(`//td[normalize-space(text())="${name}"]`)).count() > 0;
   }
 
   remove(position: number) {
