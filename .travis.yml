@@ -12,7 +12,7 @@ addons:
   ssh_known_hosts: ladders.lrem.net
 before_install:
   - "export DISPLAY=:99.0"
-  - - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/xvfb_99.pid \
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/xvfb_99.pid \
       --make-pidfile --background --exec /usr/bin/Xvfb -- \
       :99 -ac -screen 0 3840x2160x24"
   - "sh -e /etc/init.d/xvfb start"
