@@ -408,4 +408,6 @@ export class ToSComponent { }
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })
-export class AppComponent { }
+export class AppComponent { 
+  public version = environment.version;
+}

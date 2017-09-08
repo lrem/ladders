@@ -39,7 +39,10 @@ script:
   - ng serve &
   - sleep 5 # In the odd case starting the server takes longer than Chrome.
   - ng e2e
-  - if [ $PROD ]; then ng build -prod -e prod; fi
+  - if [ $PROD ]; then 
+      sed -i -e "s/PROD_BUILD/${TRAVIS_BUILD_NUMBER}/" src/environments/environment.prod.ts; 
+      ng build -prod -e prod; 
+    fi
 after_success:
   - if [ $PROD ]; then 
     git config --global user.email "builds@travis-ci.com";
