@@ -113,7 +113,8 @@ export class SuggestPlayersComponent implements OnInit {
 })
 export class RankingComponent implements OnInit {
   @Input() public ladder: string;
-  public ranking: Object;
+  public ranking;
+  public settings;
   public ready = false;
   public math = Math;
   constructor(private http: Http,
@@ -237,20 +238,34 @@ export class LadderComponent implements OnInit {
   @ViewChild(MatchesComponent) matches: MatchesComponent;
   public ladder: string;
   public owned: boolean;
+  public settings;
   public id_token;
   constructor(private http: Http,
     private route: ActivatedRoute,
     private location: Location,
     private ngZone: NgZone,
     public gameDialog: MdDialog,
+    private snackBar: MdSnackBar,
   ) {
     window['onSignIn'] =
       (googleUser) => ngZone.run(() => this.onSignIn(googleUser));
   }
-  ngOnInit() {
+  async ngOnInit() {
     this.route.params.subscribe(params => this.ladder = params['ladder']);
     if (!environment.production) {
       this.owned = true;
+    }
+    try {
+      const res = await this.http.get(`${environment.backend}/${this.ladder}/settings`).toPromise();
+      const json = res.json();
+      if (json.exists) {
+        this.settings = json.settings;
+        this.ranking.settings = this.settings;
+      } else {
+        this.snackBar.open(`Ladder ${this.ladder} does not exist.`);
+      }
+    } catch (e) {
+      this.snackBar.open(`Problem communicating with backend.`);
     }
   }
   openGameDialog() {
