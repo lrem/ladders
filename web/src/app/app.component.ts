@@ -138,7 +138,7 @@ export class RankingComponent implements OnInit {
   }
   showHistory(player: string) {
     const dialogRef = this.historyDialog.open(HistoryDialogComponent,
-      { data: { ladder: this.ladder, player: player } });
+      { data: { ladder: this.ladder, player: player, settings: this.settings } });
   }
 }
 
@@ -149,12 +149,14 @@ export class RankingComponent implements OnInit {
 export class HistoryDialogComponent implements OnInit {
   public ladder: string;
   public player: string;
+  public settings;
   public data;
   constructor(public http: Http,
     public dialogRef: MdDialogRef<HistoryDialogComponent>,
     @Inject(MD_DIALOG_DATA) data: any) {
     this.http = http;
     this.ladder = data.ladder;
+    this.settings = data.settings;
     this.player = data.player;
   }
   ngOnInit() {
@@ -162,17 +164,23 @@ export class HistoryDialogComponent implements OnInit {
       map(res => res.json()).
       subscribe(json => {
         console.log(json);
-        json.forEach((pair) => {
-          pair[0] = new Date(pair[0] * 1000);
+        json.forEach((point) => {
+          point[0] = new Date(point[0] * 1000);
+          point.push(this.settings.mu + this.settings.sigma);
+          point.push(this.settings.mu - this.settings.sigma);
         });
-        json.unshift(['Date', 'Skill']);
+        json.unshift(['Date', 'Skill', 'μ+σ', 'μ-σ']);
+        const last_point = json[json.length - 1].slice();
+        last_point[0] = new Date();
+        json.push(last_point);
         this.data = {
           chartType: 'Line',
           dataTable: json,
           options: {
             height: 400,
             width: 600,
-            legend: {position: 'none'}
+            legend: {position: 'none'},
+            vAxis: {format: 'decimal'},
           },
         }
       });
