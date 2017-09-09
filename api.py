@@ -83,6 +83,16 @@ def settings(ladder: str) -> flask.Response:
     return flask.jsonify({'result': 'ok'}), 201
 
 
+@app.route('/api/<ladder>/settings', methods=['GET'])
+def get_settings(ladder: str) -> flask.Response:
+    """Get settings of a ladder."""
+    if not ladder_exists(ladder):
+        return flask.jsonify({'exists': False})
+    cursor = flask.g.dbh.cursor()
+    cursor.execute('select * from ladders where name=?', [ladder])
+    return flask.jsonify({'exists': True, 'settings': dict(cursor.fetchone())})
+
+
 @app.route('/api/<ladder>/game', methods=['POST'])
 def submit(ladder: str) -> flask.Response:
     """Submit game results."""
