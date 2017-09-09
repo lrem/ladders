@@ -54,6 +54,6 @@ after_success:
     fi
 after_failure:
   - for f in screenshots/*; do
-      echo $f
-      curl -F "file=@$f;filename=${TRAVIS_BUILD_NUMBER}-$(basename $f)" http://prod:${PROD_PWD}@ladders.lrem.net/dev/;
+      echo $f;
+      curl -F "file=@$f;filename=${TRAVIS_BUILD_NUMBER}-$(basename "$f")" http://prod:${PROD_PWD}@ladders.lrem.net/dev/;
       done
