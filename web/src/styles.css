@@ -47,3 +47,8 @@ footer {
   margin: auto;
   text-align: center;
 }
+
+/* https://github.com/angular/material2/issues/998 */
+.mat-drawer-container, .mat-drawer-content, .mat-sidenav-container, .mat-sidenav-content {
+    transform: none !important;
+}
