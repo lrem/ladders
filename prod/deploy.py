@@ -50,10 +50,11 @@ def deploy_web(build_number: int) -> None:
 
 def deploy_api(build_number: int) -> None:
     """Move the old file away, new one in place and reload uwsgi."""
-    script = os.path.join(API_ROOT, "api.py")
-    if os.path.exists(script):
-        os.rename(script, script+"pre-%d" % build_number)
-    shutil.copy2(os.path.join(GIT_ROOT, "api.py"), script)
+    for basename in ("api.py", "ranking.py"):
+        script = os.path.join(API_ROOT, basename)
+        if os.path.exists(script):
+            os.rename(script, script+"pre-%d" % build_number)
+        shutil.copy2(os.path.join(GIT_ROOT, basename), script)
     pipe = open(UWSGI_MASTER_PIPE, "w")
     pipe.write("r\n")
     pipe.close()

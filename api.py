@@ -4,14 +4,13 @@ import logging
 import os
 import sqlite3
 import zlib
-
-import typing
-from typing import Tuple, List, Dict, Iterable
+from typing import Any, DefaultDict, Iterable, List
 
 import flask  # type:ignore
 import oauth2client.client
 import oauth2client.crypt
-import trueskill
+
+from ranking import Ranking
 
 app = flask.Flask(__name__)  # pylint: disable=invalid-name
 
@@ -159,8 +158,8 @@ def remove(ladder: str) -> flask.Response:
         cursor.execute('select mu, sigma from ladders where name = ?',
                        [ladder])
         conf = cursor.fetchone()
-        cursor.execute('update players set mu = ?, sigma = ? '
-                       'where ladder = ?',
+        cursor.execute('update players set mu=?, sigma=?, games_count=0, '
+                       'wins_count=0 where ladder = ?',
                        [conf['mu'], conf['sigma'], ladder])
     return flask.jsonify()
 
@@ -170,7 +169,7 @@ def ranking(ladder: str) -> flask.Response:
     """Get the players ranked by their skill."""
     if not ladder_exists(ladder):
         return flask.jsonify({'exists': False})
-    rnk = Ranking(ladder)
+    rnk = Ranking(ladder, flask.g.dbh)
     rnk.recalculate()
     result = {
         'exists': True,
@@ -197,7 +196,7 @@ def matches(ladder: str, count=42, offset=0) -> flask.Response:
             reporter = anonymize(reporter_uid, reporter_ip)
         else:
             reporter = None
-        outcome: typing.DefaultDict[int, List[str]] = collections.defaultdict(list)
+        outcome: DefaultDict[int, List[str]] = collections.defaultdict(list)
         cursor.execute('select position, player from participants '
                        'where game = ?', [gid])
         for entry in cursor.fetchall():
@@ -311,7 +310,7 @@ def allow_cross_domain(response: flask.Response):
 
 
 @app.teardown_request
-def teardown_request(_exception: typing.Any) -> None:
+def teardown_request(_exception: Any) -> None:
     """Hook to close the SQLite connection."""
     flask.g.dbh.close()
 
@@ -348,86 +347,6 @@ def ladder_exists(ladder: str) -> bool:
     return flask.g.dbh.execute('select count(*) from ladders where name = ?',
                                [ladder]).fetchone()[0] > 0
 
-
-class Ranking(object):
-    """A class to calculate ladder's ranking. Assumes context of a request.
-    """
-
-    def __init__(self, ladder: str) -> None:
-        self.ladder = ladder
-        self.cursor = flask.g.dbh.cursor()
-        self.players: Dict[str, trueskill.Rating] = {}
-        self.tsh: trueskill.TrueSkill = None
-        self.last_ranking = 0
-
-    def standings(self) -> List[typing.Any]:
-        """Return the list of players on the ladder sorted by skill."""
-        self.cursor.execute('select name, mu from players where ladder = ? '
-                            'order by mu desc', [self.ladder])
-        return self.cursor.fetchall()
-
-    def recalculate(self) -> None:
-        """Update the ranking with all matches since last recalculate."""
-        self._get_ladder()
-        self.cursor.execute('select id, timestamp from games '
-                            'where ladder=? and timestamp>?',
-                            [self.ladder, self.last_ranking])
-        for game_id, timestamp in self.cursor.fetchall():
-            logging.info('Processing game %d at timestamp %d',
-                         game_id, timestamp)
-            logging.info('%d %d %s', timestamp, self.last_ranking,
-                         timestamp > self.last_ranking)
-            self.last_ranking = max(self.last_ranking, timestamp)
-            names, skills, positions = self._get_game(game_id)
-            new_ranks = self.tsh.rate(skills, ranks=positions)
-            for player, skill in zip(names, new_ranks):
-                self.players[player] = skill[0]
-                self._record_history(player, skill[0], timestamp)
-        self._update_ladder()
-
-    def _get_ladder(self) -> None:
-        """Get a TrueSkill object and the timestamp of the last game."""
-        self.cursor.execute('select mu, sigma, beta, tau, draw_probability, last_ranking '
-                            'from ladders where name = ?', [self.ladder])
-        conf = self.cursor.fetchone()
-        self.tsh = trueskill.TrueSkill(mu=conf['mu'], sigma=conf['sigma'],
-                                       beta=conf['beta'], tau=conf['tau'],
-                                       draw_probability=conf['draw_probability'])
-        self.last_ranking = conf['last_ranking']
-
-    def _get_game(self, game_id: int)-> Tuple[List[str], List[List[float]], List[int]]:
-        self.cursor.execute('select player, position from participants '
-                            'where game = ?', [game_id])
-        names, skills, positions = [], [], []
-        for player, position in self.cursor.fetchall():
-            logging.info('%d: %s', position, player)
-            if player not in self.players:
-                self.cursor.execute('select mu, sigma from players '
-                                    'where name=? and ladder=?', [player, self.ladder])
-                skill = self.cursor.fetchone()
-                logging.info('Fetched player %s skill %s', player, skill['mu'])
-                self.players[player] = self.tsh.create_rating(
-                    skill['mu'], skill['sigma'])
-            names.append(player)
-            skills.append([self.players[player]])
-            positions.append(position)
-        return names, skills, positions
-
-    def _record_history(self, player: str, skill: trueskill.Rating, timestamp: int) -> None:
-        self.cursor.execute('insert into history (ladder, player, timestamp, '
-                            'mu) values (?,?,?,?)', [self.ladder, player, timestamp, skill.mu])
-
-    def _update_ladder(self) -> None:
-        """Update ladder with the newly computed ratings and last timestamp."""
-        with flask.g.dbh:  # Automatically commit/rollback.
-            if self.last_ranking > 0:
-                self.cursor.execute('update ladders set last_ranking = ? '
-                                    'where name = ?', [self.last_ranking, self.ladder])
-            for name in self.players:
-                self.cursor.execute('update players set mu = ?, sigma = ? '
-                                    'where name=? and ladder=?',
-                                    [self.players[name].mu, self.players[name].sigma, name,
-                                     self.ladder])
 
 def main():
     """Main, a separate function for scoping."""

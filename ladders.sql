@@ -19,6 +19,9 @@ create table players (
     primary key(name, ladder)
 );
 
+alter table players add column games_count integer not null default 0;
+alter table players add column wins_count integer not null default 0;
+
 create table history (
     ladder text not null,
     player text not null,
