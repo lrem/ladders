@@ -30,8 +30,9 @@ exports.config = {
   },
   plugins: [{
     package: 'jasmine2-protractor-utils',
-    screenshotPath:'./screenshots',
-    disableHTMLReport: true,
+    screenshotPath: './screenshots',
+    htmlReportDir: './screenshots',
+    disableHTMLReport: false,
     disableScreenshot: false,
     screenshotOnExpectFailure:true,
     screenshotOnSpecFailure:true,
