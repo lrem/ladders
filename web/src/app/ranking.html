@@ -6,11 +6,14 @@
         <td></td>
         <th>Name</th>
         <th>Skill level</th>
+        <th>Wins/Games</th>
       </tr>
       <tr *ngFor="let player of ranking; let index=index">
-        <th>{{index}}</th>    
+        <th>{{index}}</th>
         <td>{{player.name}}</td>
         <td>{{math.round(player.mu)}}</td>
+        <td>{{player.wins_count}}/{{player.games_count}}
+           ({{math.round(100 * player.wins_count / player.games_count)}}%)</td>
         <td><button md-raised-button (click)="showHistory(player.name)">History</button></td>
       </tr>
     </table>
