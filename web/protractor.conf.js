@@ -35,5 +35,5 @@ exports.config = {
     disableScreenshot: false,
     screenshotOnExpectFailure:true,
     screenshotOnSpecFailure:true,
-    clearFoldersBeforeTest: true,
+    clearFoldersBeforeTest: false,
 }]};
