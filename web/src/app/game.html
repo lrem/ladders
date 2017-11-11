@@ -8,17 +8,21 @@
         <div class="header" *ngIf="team_index==2">3rd place</div>
         <div class="header" *ngIf="team_index>=3">{{team_index+1}}th place</div>
         <div class="cell" *ngFor="let player of team; let player_index=index">
-          <app-suggest-players 
+          <app-suggest-players
             [ladder]="ladder"
             [players]="players"
-            [player_index]="player_index" 
+            [player_index]="player_index"
             [team_index]="team_index">
           </app-suggest-players>
         </div>
       </div>
     </div>
   </md-dialog-content>
+  <br>
   <md-dialog-actions>
+    <button *ngIf="players.length == 2 && !submitting" type="button" (click)="swapTeams()">
+      Swap the teams
+    </button>
     <button *ngIf="!submitting" type="submit" [disabled]="!formCtrl.form.valid">
       Report the game
     </button>

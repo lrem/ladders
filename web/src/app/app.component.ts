@@ -57,6 +57,14 @@ export class GameDialogComponent implements OnInit {
   addPlayer() {
     this.players.map(row => {row.push({name: ''})});
   }
+  swapTeams() {
+    if (this.players.length !== 2) {
+      throw RangeError('Swap is supported only if there are 2 teams!');
+    }
+    const tmp = this.players[0];
+    this.players[0] = this.players[1];
+    this.players[1] = tmp;
+  }
   onSubmit() {
     this.submitting = true;
     const headers = new Headers();
