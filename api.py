@@ -242,7 +242,7 @@ def owned(ladder: str) -> bool:
             [user_id, ladder])
         result = cursor.fetchone()[0] == 1
     except oauth2client.crypt.AppIdentityError as exception:
-        logging.info('Auth exception: ' + str(exception))
+        logging.info('Auth exception: %s', exception)
         result = False
     return result
 
@@ -258,7 +258,7 @@ def owned_ladders():
             [user_id])
         result = [row[0] for row in cursor.fetchall()]
     except oauth2client.crypt.AppIdentityError as exception:
-        logging.info('Auth exception: ' + str(exception))
+        logging.info('Auth exception: %s', exception)
         result = []
     return flask.jsonify(result)
 

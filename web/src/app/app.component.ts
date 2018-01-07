@@ -116,41 +116,6 @@ export class SuggestPlayersComponent implements OnInit {
 }
 
 @Component({
-  selector: 'app-ranking',
-  templateUrl: './ranking.html'
-})
-export class RankingComponent implements OnInit {
-  @Input() public ladder: string;
-  public ranking;
-  public settings;
-  public ready = false;
-  public math = Math;
-  constructor(private http: Http,
-    public historyDialog: MatDialog,
-  ) { }
-  ngOnInit() {
-    this.reload()
-  }
-  reload() {
-    this.http.get(`${environment.backend}/${this.ladder}/ranking`).
-      map(res => res.json()).
-      subscribe(json => {
-        if (json.exists) {
-          this.ranking = json.ranking;
-          this.ready = true
-        } else {
-          // console.debug(`${this.ladder} does not exist`);
-          this.ready = true
-        }
-      });
-  }
-  showHistory(player: string) {
-    const dialogRef = this.historyDialog.open(HistoryDialogComponent,
-      { data: { ladder: this.ladder, player: player, settings: this.settings } });
-  }
-}
-
-@Component({
   selector: 'app-history',
   templateUrl: './history.html'
 })
@@ -193,6 +158,41 @@ export class HistoryDialogComponent implements OnInit {
         }
       });
     }
+}
+
+@Component({
+  selector: 'app-ranking',
+  templateUrl: './ranking.html'
+})
+export class RankingComponent implements OnInit {
+  @Input() public ladder: string;
+  public ranking;
+  public settings;
+  public ready = false;
+  public math = Math;
+  constructor(private http: Http,
+    public historyDialog: MatDialog,
+  ) { }
+  ngOnInit() {
+    this.reload()
+  }
+  reload() {
+    this.http.get(`${environment.backend}/${this.ladder}/ranking`).
+      map(res => res.json()).
+      subscribe(json => {
+        if (json.exists) {
+          this.ranking = json.ranking;
+          this.ready = true
+        } else {
+          // console.debug(`${this.ladder} does not exist`);
+          this.ready = true
+        }
+      });
+  }
+  showHistory(player: string) {
+    const dialogRef = this.historyDialog.open(HistoryDialogComponent,
+      { data: { ladder: this.ladder, player: player, settings: this.settings } });
+  }
 }
 
 @Component({
