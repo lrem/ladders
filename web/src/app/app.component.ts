@@ -2,7 +2,7 @@ import { Component, Input, Output, Inject, ViewChild, NgZone, OnInit } from '@an
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Http, Response, RequestOptions, Headers, Request, RequestMethod } from '@angular/http';
-import { MdDialog, MdDialogRef, MD_DIALOG_DATA, MdSnackBar } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { Location } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormControl } from '@angular/forms';
@@ -24,8 +24,8 @@ export class GameDialogComponent implements OnInit {
   public players_per_team = 1;
   public players = [[{ name: '' }], [{ name: '' }]];
   constructor(public http: Http,
-    public dialogRef: MdDialogRef<GameDialogComponent>,
-    @Inject(MD_DIALOG_DATA) data: any) {
+    public dialogRef: MatDialogRef<GameDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) data: any) {
     this.http = http;
     this.ladder = data.ladder;
     this.id_token = data.id_token;
@@ -126,7 +126,7 @@ export class RankingComponent implements OnInit {
   public ready = false;
   public math = Math;
   constructor(private http: Http,
-    public historyDialog: MdDialog,
+    public historyDialog: MatDialog,
   ) { }
   ngOnInit() {
     this.reload()
@@ -160,8 +160,8 @@ export class HistoryDialogComponent implements OnInit {
   public settings;
   public data;
   constructor(public http: Http,
-    public dialogRef: MdDialogRef<HistoryDialogComponent>,
-    @Inject(MD_DIALOG_DATA) data: any) {
+    public dialogRef: MatDialogRef<HistoryDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) data: any) {
     this.http = http;
     this.ladder = data.ladder;
     this.settings = data.settings;
@@ -260,8 +260,8 @@ export class LadderComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private ngZone: NgZone,
-    public gameDialog: MdDialog,
-    private snackBar: MdSnackBar,
+    public gameDialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) {
     window['onSignIn'] =
       (googleUser) => ngZone.run(() => this.onSignIn(googleUser));
@@ -325,7 +325,7 @@ export class CreateComponent {
   public submitting = false;
   constructor(private http: Http,
     private ngZone: NgZone,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
   ) {
     window['onSignIn'] =
       (googleUser) => ngZone.run(() => this.onSignIn(googleUser));
@@ -373,7 +373,7 @@ export class FinderComponent {
   constructor(
     private http: Http,
     private router: Router,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
   ) { }
   go() {
     this.http.get(`${environment.backend}/${this.name}/exists`).

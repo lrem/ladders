@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
-import { MaterialModule} from '@angular/material';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+import { MatToolbarModule, MatSidenavModule, MatIconModule, MatDialogModule, MatProgressBarModule, MatCardModule, MatListModule, MatAutocompleteModule, MatInputModule, MatSnackBarModule} from '@angular/material';
 
 import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
   MatchesComponent, CreateComponent, ToSComponent, LandingComponent,
@@ -37,9 +37,18 @@ import { AppComponent, LadderComponent, GameDialogComponent, RankingComponent,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    MaterialModule,
     BrowserAnimationsModule,
     Ng2GoogleChartsModule,
+    MatIconModule,
+    MatDialogModule,
+    MatProgressBarModule,
+    MatCardModule,
+    MatListModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    MatSnackBarModule,
+    MatSidenavModule,
+    MatToolbarModule,
     RouterModule.forRoot([
       {path: 'ladder/:ladder', component: LadderComponent},
       {path: 'create', component: CreateComponent},

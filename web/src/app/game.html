@@ -1,6 +1,6 @@
-<h1 md-dialog-title>Report a game in {{ladder}}</h1>
+<h1 mat-dialog-title>Report a game in {{ladder}}</h1>
 <form (ngSubmit)="onSubmit()" #formCtrl="ngForm">
-  <md-dialog-content>
+  <mat-dialog-content>
     <div class="table">
       <div class="row" *ngFor="let team of players; let team_index=index">
         <div class="header" *ngIf="team_index==0">Winner(s)</div>
@@ -17,16 +17,16 @@
         </div>
       </div>
     </div>
-  </md-dialog-content>
+  </mat-dialog-content>
   <br>
-  <md-dialog-actions>
+  <mat-dialog-actions>
     <button *ngIf="players.length == 2 && !submitting" type="button" (click)="swapTeams()">
       Swap the teams
     </button>
     <button *ngIf="!submitting" type="submit" [disabled]="!formCtrl.form.valid">
       Report the game
     </button>
-    <md-progress-bar *ngIf="submitting" mode="indeterminate">
-    </md-progress-bar>
-  </md-dialog-actions>
+    <mat-progress-bar *ngIf="submitting" mode="indeterminate">
+    </mat-progress-bar>
+  </mat-dialog-actions>
 </form>

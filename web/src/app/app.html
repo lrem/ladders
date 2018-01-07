@@ -1,16 +1,16 @@
-<md-sidenav-container>
-  <md-toolbar color="primary">
+<mat-sidenav-container>
+  <mat-toolbar color="primary">
     <button class="app-icon-button" (click)="sidenav.toggle()">
       <i class="material-icons app-toolbar-menu">menu</i>
     </button>
     Ladders
-  </md-toolbar>
-  <md-sidenav #sidenav>
+  </mat-toolbar>
+  <mat-sidenav #sidenav>
     <div class="g-signin2" data-scope="openid email"
       data-onsuccess="onSignIn"></div>
     <button onclick="signOut();">Sign out</button>
     <p>Build: {{version}}</p>
-  </md-sidenav>
+  </mat-sidenav>
   <router-outlet></router-outlet>
   <footer>
     © 2017 
@@ -18,4 +18,4 @@
     Use of this site constitutes acceptance of the
     <a href="/tos">Terms of Service/Privacy Policy</a>.
   </footer>
-</md-sidenav-container>
+</mat-sidenav-container>

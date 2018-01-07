@@ -29,7 +29,7 @@ ul.team li {
 }
 
 @media(min-width:800px) {
-  md-card {
+  mat-card {
     min-width: 40%;
     width: auto;
     float: left;

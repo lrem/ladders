@@ -1,15 +1,15 @@
-<md-input-container>
+<mat-input-container>
     <input type="text"
-           mdInput 
+           matInput 
            [formControl]="suggestionControl"
            [(ngModel)]="players[team_index][player_index].name" 
            placeholder="Player {{player_index+1}} in team {{team_index+1}}"
            name="name{{team_index}}.{{player_index}}" 
-           [mdAutocomplete]="auto"
+           [matAutocomplete]="auto"
            required>
-    <md-autocomplete #auto="mdAutocomplete">
-        <md-option *ngFor="let player of suggested" [value]="player">
+    <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let player of suggested" [value]="player">
             {{player}}
-        </md-option>
-    </md-autocomplete>
-</md-input-container>
+        </mat-option>
+    </mat-autocomplete>
+</mat-input-container>

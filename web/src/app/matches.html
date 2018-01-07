@@ -1,6 +1,6 @@
-<md-card>
-  <md-card-title>Recent matches in {{ladder}}</md-card-title>
-  <md-card-content>
+<mat-card>
+  <mat-card-title>Recent matches in {{ladder}}</mat-card-title>
+  <mat-card-content>
     <table *ngIf="ready">
       <tr>
         <th>Date</th>
@@ -23,12 +23,12 @@
         </td>
         <td *ngIf="this.owned">
           {{match.reporter}}
-          <button md-mini-fab (click)="remove(match.id)" class="remove">
-            <md-icon>delete</md-icon>
+          <button mat-mini-fab (click)="remove(match.id)" class="remove">
+            <mat-icon>delete</mat-icon>
           </button>
         </td>
       </tr>
     </table>
     <p *ngIf="!ready">Loading match list.</p>
-  </md-card-content>
-</md-card>
+  </mat-card-content>
+</mat-card>
